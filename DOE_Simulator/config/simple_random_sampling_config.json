@@ -1,0 +1,16 @@
+{
+  "methodology": "simple_random_sampling",
+  "data_path": "data/raw/ecommerce_data.csv",
+  "sample_size": 1000,
+  "random_seed": 42,
+  "replace": false,
+  "output_path": "data/processed/simple_random_sample.csv",
+  "assess_representativeness": true,
+  "check_columns": [
+    "age",
+    "total_orders",
+    "avg_order_value",
+    "conversion_rate",
+    "lifetime_value"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "methodology": "systematic_sampling",
+  "data_path": "data/raw/ecommerce_data.csv",
+  "sample_size": 1000,
+  "random_start": null,
+  "random_seed": 42,
+  "output_path": "data/processed/systematic_sample.csv",
+  "check_periodicity": true,
+  "periodicity_columns": [
+    "total_orders",
+    "avg_order_value"
+  ],
+  "max_period": 50,
+  "assess_representativeness": true,
+  "check_columns": [
+    "age",
+    "total_orders",
+    "avg_order_value",
+    "conversion_rate"
+  ]
+}

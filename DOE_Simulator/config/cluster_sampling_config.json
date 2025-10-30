@@ -1,0 +1,23 @@
+{
+  "methodology": "cluster_sampling",
+  "data_path": "data/raw/ecommerce_data.csv",
+  "cluster_by": "location",
+  "n_clusters": 2,
+  "cluster_sample_size": null,
+  "within_cluster_sampling": "all",
+  "random_seed": 42,
+  "output_path": "data/processed/cluster_sample.csv",
+  "calculate_design_effect_var": "conversion_rate",
+  "assess_homogeneity": true,
+  "homogeneity_vars": [
+    "conversion_rate",
+    "lifetime_value",
+    "churn_probability"
+  ],
+  "compare_clusters": true,
+  "comparison_vars": [
+    "age",
+    "total_orders",
+    "avg_order_value"
+  ]
+}

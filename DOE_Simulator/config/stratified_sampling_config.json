@@ -1,0 +1,17 @@
+{
+  "methodology": "stratified_sampling",
+  "data_path": "data/raw/ecommerce_data.csv",
+  "stratify_by": "income_level",
+  "sample_size": 1000,
+  "allocation": "proportional",
+  "random_seed": 42,
+  "output_path": "data/processed/stratified_sample.csv",
+  "assess_balance": true,
+  "calculate_efficiency": true,
+  "efficiency_outcome_var": "conversion_rate",
+  "outcome_vars": [
+    "conversion_rate",
+    "lifetime_value",
+    "churn_probability"
+  ]
+}
