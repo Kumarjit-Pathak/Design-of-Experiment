@@ -118,14 +118,15 @@ st.markdown("Explore the e-commerce customer dataset with 20,000 observations an
 @st.cache_data
 def load_ecommerce_data():
     """Load and cache the e-commerce dataset."""
-    data_path = Path(__file__).parent / "data" / "raw" / "ecommerce_data.csv"
-    st.write(f"Looking for dataset at: {data_path}")
+    # data_path = Path(__file__).parent / "data" / "raw" / "ecommerce_data.csv"
+    # st.write(f"Looking for dataset at: {data_path}")
+    
 
-    if not data_path.exists():
-        st.error(f"Dataset not found! Please ensure '{data_path}' exists.")
-        return None
+    # if not data_path.exists():
+    #     st.error(f"Dataset not found! Please ensure '{data_path}' exists.")
+    #     return None
 
-    df = pd.read_csv(data_path)
+    df = pd.read_csv(r"DOE_Simulator/data/raw/ecommerce_data.csv")
     return df
 
 # Load data
