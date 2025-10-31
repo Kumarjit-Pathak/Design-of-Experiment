@@ -119,7 +119,7 @@ st.markdown("Explore the e-commerce customer dataset with 20,000 observations an
 def load_ecommerce_data():
     """Load and cache the e-commerce dataset."""
     try:
-        df = pd.read_csv('../data/raw/ecommerce_data.csv')
+        df = pd.read_csv('/data/raw/ecommerce_data.csv')
         return df
     except FileNotFoundError:
         st.error("Dataset not found! Please ensure 'data/raw/ecommerce_data.csv' exists.")
