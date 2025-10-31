@@ -141,7 +141,7 @@ st.markdown("""
 
     /* Sidebar - Darker slate */
     [data-testid="stSidebar"] {
-        background-color: #1e293b;
+        background-color: #bdd1f2;
         border-right: 1px solid #334155;
     }
 
