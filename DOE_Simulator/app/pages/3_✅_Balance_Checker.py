@@ -19,6 +19,7 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 from src.diagnostics.balance_checker import BalanceChecker
+from src.utils.data_loader import load_ecommerce_data
 
 # Page config
 st.set_page_config(page_title="Balance Checker", page_icon="✅", layout="wide")
@@ -99,15 +100,15 @@ Check if treatment and control groups are balanced on baseline covariates.
 
 # Load data
 @st.cache_data
-def load_data():
+def cached_load_ecommerce_data():
+    """Load and cache the e-commerce dataset."""
     try:
-        df = pd.read_csv('../data/raw/ecommerce_data.csv')
-        return df
-    except:
-        st.error("Dataset not found!")
+        return load_ecommerce_data()
+    except Exception as e:
+        st.error(f"Failed to load dataset: {str(e)}")
         return None
 
-df = load_data()
+df = cached_load_ecommerce_data()
 
 if df is not None:
     # Sidebar configuration
@@ -270,7 +271,7 @@ if df is not None:
             marker_colors=['#667eea', '#764ba2']
         )])
         fig.update_layout(title="Treatment Assignment", height=300)
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
         st.markdown("---")
 
@@ -362,7 +363,7 @@ if df is not None:
 
                     st.dataframe(
                         numerical_df,
-                        use_container_width=True,
+                        width="stretch",
                         column_config={
                             "t-statistic": st.column_config.NumberColumn("t-statistic", format="%.4f"),
                             "p-value": st.column_config.NumberColumn("p-value", format="%.4f")
@@ -383,7 +384,7 @@ if df is not None:
 
                     st.dataframe(
                         categorical_df,
-                        use_container_width=True,
+                        width="stretch",
                         column_config={
                             "χ² statistic": st.column_config.NumberColumn("χ² statistic", format="%.4f"),
                             "p-value": st.column_config.NumberColumn("p-value", format="%.4f"),
@@ -425,8 +426,8 @@ if df is not None:
                         summary_data.append({
                             'Covariate': result['covariate'],
                             'Type': 'Categorical',
-                            'SMD': 'N/A',
-                            '|SMD|': 'N/A',
+                            'SMD': np.nan,
+                            '|SMD|': np.nan,
                             'Balanced': '✅' if result['balanced'] else '❌',
                             'Status': result.get('interpretation', 'Check distributions')
                         })
@@ -441,7 +442,7 @@ if df is not None:
                         return 'background-color: #f8d7da'
                     return ''
 
-                styled_df = summary_df.style.applymap(
+                styled_df = summary_df.style.map(
                     color_balance,
                     subset=['Balanced']
                 ).format({
@@ -449,7 +450,7 @@ if df is not None:
                     '|SMD|': lambda x: f'{x:.4f}' if isinstance(x, (int, float)) else x
                 })
 
-                st.dataframe(styled_df, use_container_width=True)
+                st.dataframe(styled_df, width="stretch")
 
             with tab2:
                 # Love plot data
@@ -573,7 +574,7 @@ if df is not None:
                         hovermode='closest'
                     )
 
-                    st.plotly_chart(fig, use_container_width=True)
+                    st.plotly_chart(fig, width="stretch")
 
                     # Add interactive threshold selector
                     st.markdown("---")
@@ -631,7 +632,7 @@ if df is not None:
 
                     st.dataframe(
                         love_data_display[['covariate', 'smd', 'abs_smd', 'balance_status']],
-                        use_container_width=True,
+                        width="stretch",
                         column_config={
                             "covariate": "Covariate",
                             "smd": st.column_config.NumberColumn("SMD", format="%.4f"),

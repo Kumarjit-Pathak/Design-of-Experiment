@@ -443,3 +443,45 @@ if __name__ == "__main__":
 
     except DataLoadError as e:
         print(f"[ERROR] {e}")
+
+
+def load_ecommerce_data() -> pd.DataFrame:
+    """
+    Load the e-commerce dataset for the DOE Simulator.
+    
+    This is a centralized function to ensure consistent data loading
+    across all Streamlit pages.
+    
+    Returns:
+        pd.DataFrame: The loaded e-commerce dataset
+        
+    Raises:
+        DataLoadError: If the file cannot be loaded
+        
+    Example:
+        >>> df = load_ecommerce_data()
+        >>> print(f"Loaded {len(df)} rows")
+    """
+    import os
+    
+    # Define possible paths (relative to different execution contexts)
+    possible_paths = [
+        'data/raw/ecommerce_data.csv',  # From DOE_Simulator root
+        '../data/raw/ecommerce_data.csv',  # From app/ directory
+        'DOE_Simulator/data/raw/ecommerce_data.csv',  # From project root
+    ]
+    
+    for path in possible_paths:
+        try:
+            if os.path.exists(path):
+                df = pd.read_csv(path)
+                print(f"[OK] Loaded e-commerce data from: {path}")
+                print(f"     Shape: {df.shape}")
+                return df
+        except Exception as e:
+            continue
+    
+    # If no path worked, raise error
+    raise DataLoadError(
+        f"Could not load e-commerce dataset. Tried paths: {possible_paths}"
+    )

@@ -28,6 +28,7 @@ from src.experimental_designs.randomized_block import RandomizedBlockDesign
 from src.experimental_designs.factorial_design import FactorialDesign
 from src.experimental_designs.fractional_factorial import FractionalFactorialDesign, COMMON_DESIGNS
 from src.experimental_designs.response_surface import CentralCompositeDesign, BoxBehnkenDesign
+from src.utils.data_loader import load_ecommerce_data
 
 # Page config
 st.set_page_config(page_title="Experimental Designs", page_icon="🔬", layout="wide")
@@ -135,15 +136,15 @@ Choose a design type, configure parameters, and see the results!
 
 # Load data
 @st.cache_data
-def load_data():
+def cached_load_ecommerce_data():
+    """Load and cache the e-commerce dataset."""
     try:
-        df = pd.read_csv('../data/raw/ecommerce_data.csv')
-        return df
-    except:
-        st.error("Dataset not found!")
+        return load_ecommerce_data()
+    except Exception as e:
+        st.error(f"Failed to load dataset: {str(e)}")
         return None
 
-df = load_data()
+df = cached_load_ecommerce_data()
 
 if df is not None:
     # Sidebar - Design selection
@@ -300,13 +301,13 @@ if df is not None:
                 font=dict(color='#cbd5e1'),
                 height=400
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
             # Show design table
             st.subheader("Design Table (First 20 Rows)")
             display_cols = ['customer_id', 'treatment', 'age', 'gender', 'income_level', 'total_orders']
             display_cols = [col for col in display_cols if col in design.columns]
-            st.dataframe(design[display_cols].head(20), use_container_width=True)
+            st.dataframe(design[display_cols].head(20), width="stretch")
 
             # Simulate response and analyze
             st.markdown("---")
@@ -377,7 +378,7 @@ if df is not None:
                 means_df = pd.DataFrame(results['treatment_statistics']).T
                 means_df = means_df.round(4)
 
-                st.dataframe(means_df, use_container_width=True)
+                st.dataframe(means_df, width="stretch")
 
                 # Visualization
                 fig = go.Figure()
@@ -403,7 +404,7 @@ if df is not None:
                     height=400
                 )
 
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width="stretch")
 
     elif design_type == "Randomized Block Design (RBD)":
         st.header("Randomized Block Design (RBD)")
@@ -539,7 +540,7 @@ if df is not None:
             st.subheader("Treatment × Block Design")
 
             crosstab = pd.crosstab(design[block_col], design['treatment'])
-            st.dataframe(crosstab, use_container_width=True)
+            st.dataframe(crosstab, width="stretch")
 
             # Heatmap
             fig = px.imshow(
@@ -555,7 +556,7 @@ if df is not None:
                 font=dict(color='#cbd5e1'),
                 height=400
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
             # Simulate and analyze
             st.markdown("---")
@@ -749,7 +750,7 @@ if df is not None:
 
             factor_cols = list(factors.keys())
             display_cols = factor_cols + ['replication', 'std_order', 'run_order']
-            st.dataframe(design[display_cols], use_container_width=True)
+            st.dataframe(design[display_cols], width="stretch")
 
             # Simulate response
             st.markdown("---")
@@ -964,7 +965,7 @@ if df is not None:
 
             factor_cols = summary['factor_names']
             display_cols = factor_cols + ['std_order', 'run_order']
-            st.dataframe(design[display_cols], use_container_width=True, height=400)
+            st.dataframe(design[display_cols], width="stretch", height=400)
 
             # NEW: Assign design to sample units
             st.markdown("---")
@@ -1046,7 +1047,7 @@ if df is not None:
                 ).value_counts().reset_index()
                 allocation_summary.columns = ['Treatment Combination', 'Count']
 
-                st.dataframe(allocation_summary, use_container_width=True)
+                st.dataframe(allocation_summary, width="stretch")
 
                 # Show sample of assigned units
                 st.markdown("---")
@@ -1055,7 +1056,7 @@ if df is not None:
                 key_cols = ['customer_id', 'age', 'gender', 'income_level'] + factor_cols
                 key_cols = [col for col in key_cols if col in assigned_design.columns]
 
-                st.dataframe(assigned_design[key_cols].head(20), use_container_width=True)
+                st.dataframe(assigned_design[key_cols].head(20), width="stretch")
 
                 # Download assigned design
                 csv_assigned = assigned_design.to_csv(index=False)
@@ -1167,7 +1168,7 @@ if df is not None:
             st.subheader("Design Matrix (Coded Units)")
 
             # Color-code by point type
-            st.dataframe(design, use_container_width=True, height=400)
+            st.dataframe(design, width="stretch", height=400)
 
             # NEW: Assign design to sample units for CCD
             st.markdown("---")
@@ -1231,7 +1232,7 @@ if df is not None:
                 ).value_counts().reset_index()
                 allocation_summary.columns = ['Treatment Combination', 'Count']
 
-                st.dataframe(allocation_summary, use_container_width=True)
+                st.dataframe(allocation_summary, width="stretch")
 
                 # Show sample of assigned units
                 st.markdown("---")
@@ -1240,7 +1241,7 @@ if df is not None:
                 key_cols = ['customer_id', 'age', 'gender', 'income_level'] + summary['factor_names']
                 key_cols = [col for col in key_cols if col in assigned_design.columns]
 
-                st.dataframe(assigned_design[key_cols].head(20), use_container_width=True)
+                st.dataframe(assigned_design[key_cols].head(20), width="stretch")
 
                 # Download assigned design
                 csv_assigned = assigned_design.to_csv(index=False)
@@ -1342,7 +1343,7 @@ if df is not None:
             st.markdown("---")
             st.subheader("Design Matrix (Coded Units: -1, 0, +1)")
 
-            st.dataframe(design, use_container_width=True, height=400)
+            st.dataframe(design, width="stretch", height=400)
 
             # NEW: Assign design to sample units for Box-Behnken
             st.markdown("---")
@@ -1406,7 +1407,7 @@ if df is not None:
                 ).value_counts().reset_index()
                 allocation_summary.columns = ['Treatment Combination', 'Count']
 
-                st.dataframe(allocation_summary, use_container_width=True)
+                st.dataframe(allocation_summary, width="stretch")
 
                 # Show sample of assigned units
                 st.markdown("---")
@@ -1415,7 +1416,7 @@ if df is not None:
                 key_cols = ['customer_id', 'age', 'gender', 'income_level'] + summary['factor_names']
                 key_cols = [col for col in key_cols if col in assigned_design.columns]
 
-                st.dataframe(assigned_design[key_cols].head(20), use_container_width=True)
+                st.dataframe(assigned_design[key_cols].head(20), width="stretch")
 
                 # Download assigned design
                 csv_assigned = assigned_design.to_csv(index=False)
@@ -1446,7 +1447,7 @@ if df is not None:
                 data=csv,
                 file_name=f"design_{design_type_label}_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
                 mime="text/csv",
-                use_container_width=True,
+                width="stretch",
                 help="Downloads the complete design matrix with all factor levels and run orders"
             )
 
@@ -1475,7 +1476,7 @@ Design Parameters:
                     data=metadata_text,
                     file_name=f"design_info_{design_type_label}_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.txt",
                     mime="text/plain",
-                    use_container_width=True,
+                    width="stretch",
                     help="Downloads design metadata including parameters and configuration"
                 )
 
@@ -1485,7 +1486,7 @@ Design Parameters:
         st.markdown("---")
         st.subheader("👀 Design Preview")
 
-        st.dataframe(design.head(20), use_container_width=True)
+        st.dataframe(design.head(20), width="stretch")
 
         st.caption(f"Showing first 20 of {len(design)} total runs")
 

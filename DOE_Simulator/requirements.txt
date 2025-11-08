@@ -1,5 +1,5 @@
-# DOE Simulator - Requirements
-# Python 3.8+ required
+# DOE Simulator - Streamlit Cloud Requirements
+# Optimized for cloud deployment
 
 # Core Data & Analysis
 pandas>=2.0.0
@@ -12,16 +12,9 @@ scikit-learn>=1.2.0
 
 # Visualization
 plotly>=5.14.0
-matplotlib>=3.7.0
-seaborn>=0.12.0
 
 # Web Application
 streamlit>=1.28.0
 
-# Utilities
+# Utilities (minimal set for cloud)
 python-dateutil>=2.8.0
-pytz>=2023.3
-
-# Optional (for enhanced features)
-# openpyxl>=3.1.0  # Excel support
-# xlrd>=2.0.0  # Excel reading

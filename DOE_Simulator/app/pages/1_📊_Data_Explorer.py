@@ -21,7 +21,7 @@ import os
 # Add parent directory to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-from src.utils.data_loader import load_data, identify_column_types
+from src.utils.data_loader import load_data, identify_column_types, load_ecommerce_data
 
 # Page config
 st.set_page_config(page_title="Data Explorer", page_icon="📊", layout="wide")
@@ -116,21 +116,16 @@ st.markdown("Explore the e-commerce customer dataset with 20,000 observations an
 
 # Load data with caching
 @st.cache_data
-def load_ecommerce_data():
+def cached_load_ecommerce_data():
     """Load and cache the e-commerce dataset."""
-    # data_path = Path(__file__).parent / "data" / "raw" / "ecommerce_data.csv"
-    # st.write(f"Looking for dataset at: {data_path}")
-    
-
-    # if not data_path.exists():
-    #     st.error(f"Dataset not found! Please ensure '{data_path}' exists.")
-    #     return None
-
-    df = pd.read_csv(r"DOE_Simulator/data/raw/ecommerce_data.csv")
-    return df
+    try:
+        return load_ecommerce_data()
+    except Exception as e:
+        st.error(f"Failed to load dataset: {str(e)}")
+        return None
 
 # Load data
-df = load_ecommerce_data()
+df = cached_load_ecommerce_data()
 
 if df is not None:
     # Sidebar filters
@@ -223,13 +218,13 @@ if df is not None:
         summary_stats['missing'] = filtered_df[key_vars].isnull().sum()
         summary_stats['missing_pct'] = (summary_stats['missing'] / len(filtered_df) * 100).round(2)
 
-        st.dataframe(summary_stats.style.format("{:.2f}"), use_container_width=True)
+        st.dataframe(summary_stats.style.format("{:.2f}"), width="stretch")
 
         st.markdown("---")
 
         # Sample data
         st.subheader("Sample Data (First 10 Rows)")
-        st.dataframe(filtered_df.head(10), use_container_width=True)
+        st.dataframe(filtered_df.head(10), width="stretch")
 
     # TAB 2: Distributions
     with tab2:
@@ -261,7 +256,7 @@ if df is not None:
                     color_discrete_sequence=['#667eea']
                 )
                 fig.update_layout(showlegend=False, height=400)
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width="stretch")
 
                 # Box plot
                 fig2 = px.box(
@@ -272,7 +267,7 @@ if df is not None:
                     color_discrete_sequence=['#764ba2']
                 )
                 fig2.update_layout(showlegend=False, height=300)
-                st.plotly_chart(fig2, use_container_width=True)
+                st.plotly_chart(fig2, width="stretch")
 
             else:
                 # Bar chart for categorical
@@ -286,7 +281,7 @@ if df is not None:
                     color_continuous_scale='Purples'
                 )
                 fig.update_layout(showlegend=False, height=400)
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width="stretch")
 
                 # Pie chart
                 fig2 = px.pie(
@@ -296,7 +291,7 @@ if df is not None:
                     color_discrete_sequence=px.colors.sequential.Purples
                 )
                 fig2.update_layout(height=400)
-                st.plotly_chart(fig2, use_container_width=True)
+                st.plotly_chart(fig2, width="stretch")
 
     # TAB 3: Correlations
     with tab3:
@@ -333,7 +328,7 @@ if df is not None:
                 zmax=1
             )
             fig.update_layout(height=600)
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
             # Highlight strong correlations
             st.subheader("Strong Correlations (|r| > 0.5)")
@@ -351,7 +346,7 @@ if df is not None:
             if strong_corr:
                 strong_corr_df = pd.DataFrame(strong_corr)
                 strong_corr_df = strong_corr_df.sort_values('Correlation', key=abs, ascending=False)
-                st.dataframe(strong_corr_df.style.format({'Correlation': '{:.3f}'}), use_container_width=True)
+                st.dataframe(strong_corr_df.style.format({'Correlation': '{:.3f}'}), width="stretch")
             else:
                 st.info("No strong correlations (|r| > 0.5) found among selected variables.")
 
@@ -387,11 +382,11 @@ if df is not None:
                 color_continuous_scale='Reds'
             )
             fig.update_layout(height=400, showlegend=False)
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
             # Table
             st.subheader("Missing Data Details")
-            st.dataframe(missing_df, use_container_width=True)
+            st.dataframe(missing_df, width="stretch")
 
             # Summary
             total_missing = missing_counts.sum()

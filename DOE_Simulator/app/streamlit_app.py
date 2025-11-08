@@ -141,7 +141,7 @@ st.markdown("""
 
     /* Sidebar - Darker slate */
     [data-testid="stSidebar"] {
-        background-color: #bdd1f2;
+        background-color: #1e293b;
         border-right: 1px solid #334155;
     }
 
@@ -349,15 +349,15 @@ def main():
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        if st.button("📊 Explore Data", use_container_width=True):
+        if st.button("📊 Explore Data", width="stretch"):
             st.info("👈 Use the sidebar to navigate to 'Data Explorer'")
 
     with col2:
-        if st.button("🎲 Try Sampling", use_container_width=True):
+        if st.button("🎲 Try Sampling", width="stretch"):
             st.info("👈 Use the sidebar to navigate to 'Sampling Methods'")
 
     with col3:
-        if st.button("✅ Check Balance", use_container_width=True):
+        if st.button("✅ Check Balance", width="stretch"):
             st.info("👈 Use the sidebar to navigate to 'Balance Checker'")
 
     st.markdown("---")
