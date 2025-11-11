@@ -34,6 +34,7 @@ from src.sampling import (
     systematic_sampling,
     cluster_sampling
 )
+from src.utils.data_loader import load_ecommerce_data
 
 # Page config
 st.set_page_config(page_title="Sampling Methods", page_icon="🎲", layout="wide")
@@ -117,15 +118,15 @@ st.markdown("Explore different sampling techniques, assign treatment, and check 
 
 # Load data
 @st.cache_data
-def load_data():
+def cached_load_ecommerce_data():
+    """Load and cache the e-commerce dataset."""
     try:
-        df = pd.read_csv('../data/raw/ecommerce_data.csv')
-        return df
-    except:
-        st.error("Dataset not found!")
+        return load_ecommerce_data()
+    except Exception as e:
+        st.error(f"Failed to load dataset: {str(e)}")
         return None
 
-df = load_data()
+df = cached_load_ecommerce_data()
 
 if df is not None:
     # Sidebar - Method selection
@@ -229,7 +230,7 @@ if df is not None:
     run_sampling_and_assignment = st.sidebar.button(
         "🎯 Run Sampling & Assign Treatment",
         type="primary",
-        use_container_width=True,
+        width="stretch",
         help="Samples treatment and control groups separately from the population"
     )
 
@@ -317,7 +318,7 @@ if df is not None:
                 plot_bgcolor='rgba(0,0,0,0)',
                 font=dict(color='#cbd5e1')
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
     elif sampling_method == "Stratified Sampling":
         st.header("Stratified Random Sampling")
@@ -501,7 +502,7 @@ if df is not None:
                         )
                         fig1.update_layout(paper_bgcolor='rgba(0,0,0,0)', font=dict(color='#cbd5e1'))
 
-                    st.plotly_chart(fig1, use_container_width=True)
+                    st.plotly_chart(fig1, width="stretch")
 
                 with col2:
                     st.markdown("**Control Group Distribution**")
@@ -530,7 +531,7 @@ if df is not None:
                         )
                         fig2.update_layout(paper_bgcolor='rgba(0,0,0,0)', font=dict(color='#cbd5e1'))
 
-                    st.plotly_chart(fig2, use_container_width=True)
+                    st.plotly_chart(fig2, width="stretch")
 
                 # Stratum-level table
                 st.markdown("**Stratum-Level Breakdown**")
@@ -569,7 +570,7 @@ if df is not None:
                 }])
                 breakdown_df = pd.concat([breakdown_df, summary_row], ignore_index=True)
 
-                st.dataframe(breakdown_df, use_container_width=True)
+                st.dataframe(breakdown_df, width="stretch")
 
                 # Efficiency metrics
                 if len(stratify_vars) > 1:
@@ -769,7 +770,7 @@ if df is not None:
                 data=csv,
                 file_name=f"sample_{sampling_method.lower().replace(' ', '_')}_with_treatment.csv",
                 mime="text/csv",
-                use_container_width=True
+                width="stretch"
             )
 
             st.info("✅ CSV includes 'treatment_group' and 'treatment_label' columns")
@@ -798,7 +799,7 @@ if df is not None:
                            'treatment_group', 'treatment_label']
             display_cols = [col for col in display_cols if col in preview_df.columns]
 
-            st.dataframe(preview_df[display_cols].head(10), use_container_width=True)
+            st.dataframe(preview_df[display_cols].head(10), width="stretch")
 
         with col2:
             st.markdown("**Treatment Summary:**")

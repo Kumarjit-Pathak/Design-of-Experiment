@@ -1,23 +1,20 @@
-# DOE Simulator - Python Package Requirements
-# Design of Experiments Interactive Simulator
-#
-# Installation:
-#   pip install -r requirements.txt
+# DOE Simulator - Streamlit Cloud Requirements
+# Optimized for cloud deployment
 
-# Core Data Science Libraries
-numpy>=1.24.0
+# Core Data & Analysis
 pandas>=2.0.0
+numpy>=1.24.0
 scipy>=1.10.0
 
-# Visualization Libraries
-matplotlib>=3.7.0
-seaborn>=0.12.0
+# Statistical Analysis
+statsmodels>=0.14.0
+scikit-learn>=1.2.0
+
+# Visualization
 plotly>=5.14.0
 
-# Web Application Framework
+# Web Application
 streamlit>=1.28.0
 
-# Optional: For better data table display in Streamlit
-# Uncomment if needed:
-# openpyxl>=3.1.0  # For Excel file support
-# tabulate>=0.9.0  # For markdown table formatting
+# Utilities (minimal set for cloud)
+python-dateutil>=2.8.0
