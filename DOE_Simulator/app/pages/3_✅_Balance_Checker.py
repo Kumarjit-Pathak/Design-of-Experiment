@@ -22,7 +22,7 @@ from src.diagnostics.balance_checker import BalanceChecker
 from src.utils.data_loader import load_ecommerce_data
 
 # Page config
-st.set_page_config(page_title="Balance Checker", page_icon="✅", layout="wide")
+st.set_page_config(page_title="Balance Checker", page_icon="**", layout="wide")
 
 # Custom CSS - SLATE PROFESSIONAL THEME
 st.markdown("""
@@ -92,7 +92,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Header
-st.title("✅ Balance Checker")
+st.title(" Balance Checker")
 st.markdown("""
 Check if treatment and control groups are balanced on baseline covariates.
 **This is essential before analyzing treatment effects!**
@@ -115,9 +115,9 @@ if df is not None:
     st.sidebar.header("⚙️ Configuration")
 
     # Step 1: Create or load treatment assignment
-    st.sidebar.subheader("1️⃣ Treatment Assignment")
+    st.sidebar.subheader("1️ Treatment Assignment")
 
-    st.sidebar.info("📌 Treatment is assigned based on Customer ID for proper randomization")
+    st.sidebar.info(" Treatment is assigned based on Customer ID for proper randomization")
 
     assignment_method = st.sidebar.radio(
         "Assignment Method",
@@ -139,7 +139,7 @@ if df is not None:
             value=42
         )
 
-        if st.sidebar.button("🎲 Assign Treatment", type="primary"):
+        if st.sidebar.button(" Assign Treatment", type="primary"):
             # Use customer_id for randomization (if available)
             if 'customer_id' in df.columns:
                 # Create reproducible randomization based on customer_id hash
@@ -166,7 +166,7 @@ if df is not None:
                 df['treatment_group'] = treatment_assignment
 
             st.session_state['data_with_treatment'] = df
-            st.sidebar.success(f"✅ Treatment assigned: {(df['treatment_group']==1).sum():,} treatment, {(df['treatment_group']==0).sum():,} control")
+            st.sidebar.success(f" Treatment assigned: {(df['treatment_group']==1).sum():,} treatment, {(df['treatment_group']==0).sum():,} control")
 
     else:
         # Only allow selecting identifier columns or pre-assigned treatment columns
@@ -188,12 +188,12 @@ if df is not None:
                 val_map = {unique_vals[0]: 0, unique_vals[1]: 1}
                 df['treatment_group'] = df[existing_col].map(val_map)
                 st.session_state['data_with_treatment'] = df
-                st.sidebar.success(f"✅ Using column: {existing_col}")
+                st.sidebar.success(f" Using column: {existing_col}")
             else:
                 st.sidebar.error(f"Column {existing_col} must have exactly 2 unique values")
 
     # Step 2: Select covariates to check
-    st.sidebar.subheader("2️⃣ Select Covariates")
+    st.sidebar.subheader("2️ Select Covariates")
 
     # Issue #2 FIX: Use covariates from Sampling Methods if available
     if 'balance_covariates' in st.session_state and st.session_state['balance_covariates']:
@@ -214,7 +214,7 @@ if df is not None:
     )
 
     # Step 3: Settings
-    st.sidebar.subheader("3️⃣ Settings")
+    st.sidebar.subheader(" Settings")
 
     smd_threshold = st.sidebar.slider(
         "SMD Threshold for Balance",
@@ -231,12 +231,12 @@ if df is not None:
     auto_run = st.session_state.get('auto_run_balance_check', False)
 
     # Run balance check button (or auto-run)
-    run_check = st.sidebar.button("✅ Check Balance", type="primary") or auto_run
+    run_check = st.sidebar.button(" Check Balance", type="primary") or auto_run
 
     # Clear auto-run flag after first use
     if auto_run:
         st.session_state['auto_run_balance_check'] = False
-        st.info("🎯 **Auto-loaded from Sampling Methods page!** Results populated with your selected balance variables.")
+        st.info(" **Auto-loaded from Sampling Methods page!** Results populated with your selected balance variables.")
 
     # Main content
     st.markdown("---")
@@ -329,7 +329,7 @@ if df is not None:
             # Issue #3 FIX: Display statistical test results prominently
             if perform_tests:
                 st.markdown("---")
-                st.header("📊 Statistical Test Results")
+                st.header(" Statistical Test Results")
 
                 # Collect all test results
                 numerical_tests = []
@@ -358,7 +358,7 @@ if df is not None:
 
                 # Display numerical tests
                 if numerical_tests:
-                    st.subheader("🔢 Numerical Variables: t-tests")
+                    st.subheader(" Numerical Variables: t-tests")
                     numerical_df = pd.DataFrame(numerical_tests)
 
                     st.dataframe(
@@ -379,7 +379,7 @@ if df is not None:
 
                 # Display categorical tests
                 if categorical_tests:
-                    st.subheader("📁 Categorical Variables: Chi-square tests")
+                    st.subheader(" Categorical Variables: Chi-square tests")
                     categorical_df = pd.DataFrame(categorical_tests)
 
                     st.dataframe(
@@ -403,10 +403,10 @@ if df is not None:
 
             # Covariate-level results
             st.markdown("---")
-            st.header("📋 Covariate-Level Balance")
+            st.header(" Covariate-Level Balance")
 
             # Create tabs for different views
-            tab1, tab2, tab3 = st.tabs(["📊 Summary Table", "📈 Love Plot Data", "🔍 Detailed Results"])
+            tab1, tab2, tab3 = st.tabs([" Summary Table", " Love Plot Data", " Detailed Results"])
 
             with tab1:
                 # Summary table
@@ -578,7 +578,7 @@ if df is not None:
 
                     # Add interactive threshold selector
                     st.markdown("---")
-                    st.markdown("**🎯 Balance Threshold Explorer**")
+                    st.markdown("** Balance Threshold Explorer**")
 
                     selected_threshold = st.select_slider(
                         "Select SMD Threshold",
@@ -619,7 +619,7 @@ if df is not None:
 
                     # Display data table with color coding
                     st.markdown("---")
-                    st.markdown("**📊 Detailed Balance Table**")
+                    st.markdown("** Detailed Balance Table**")
 
                     # Add interpretation column
                     love_data_display = love_data.copy()
