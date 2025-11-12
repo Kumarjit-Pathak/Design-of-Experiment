@@ -18,7 +18,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Page configuration
 st.set_page_config(
     page_title="DOE Simulator",
-    page_icon="🎲",
+    page_icon="**",
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
@@ -35,7 +35,7 @@ st.set_page_config(
         - Statistical tests
         - Interactive visualizations
 
-        Built with Streamlit and love for statistics! 📊
+        Built with Streamlit and love for statistics! **
         """
     }
 )
@@ -277,13 +277,13 @@ def main():
     st.markdown("---")
 
     # Features
-    st.header("🎯 What You Can Do")
+    st.header(" What You Can Do")
 
     col1, col2 = st.columns(2)
 
     with col1:
         st.markdown("""
-        ### 📊 Available Now
+        ###  Available Now
 
         ✅ **Data Exploration**
         - View 20,000 e-commerce customer records
@@ -306,22 +306,22 @@ def main():
 
     with col2:
         st.markdown("""
-        ### 🚀 Coming Soon
+        ###  Coming Soon
 
-        ⏳ **Advanced Visualizations**
+         **Advanced Visualizations**
         - Love plots (standardized differences)
         - Box plots & violin plots
         - Q-Q plots & residual analysis
         - Interactive dashboards
 
-        ⏳ **Experimental Designs**
+         **Experimental Designs**
         - Completely Randomized Design (CRD)
         - Randomized Block Design (RBD)
         - Factorial Designs
         - Response Surface Methods
         - Optimal Designs
 
-        ⏳ **Power Analysis**
+         **Power Analysis**
         - Sample size calculations
         - Minimum detectable effects
         """)
@@ -329,7 +329,7 @@ def main():
     st.markdown("---")
 
     # Quick start guide
-    st.header("🚀 Quick Start")
+    st.header(" Quick Start")
 
     st.markdown("""
     <div class="info-box">
@@ -344,17 +344,17 @@ def main():
     """, unsafe_allow_html=True)
 
     # Navigation
-    st.header("📍 Navigate")
+    st.header(" Navigate")
 
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        if st.button("📊 Explore Data", width="stretch"):
-            st.info("👈 Use the sidebar to navigate to 'Data Explorer'")
+        if st.button(" Explore Data", width="stretch"):
+            st.info(" Use the sidebar to navigate to 'Data Explorer'")
 
     with col2:
-        if st.button("🎲 Try Sampling", width="stretch"):
-            st.info("👈 Use the sidebar to navigate to 'Sampling Methods'")
+        if st.button(" Try Sampling", width="stretch"):
+            st.info(" Use the sidebar to navigate to 'Sampling Methods'")
 
     with col3:
         if st.button("✅ Check Balance", width="stretch"):
@@ -366,8 +366,8 @@ def main():
     st.markdown("""
     <div style="text-align: center; padding: 2rem 0; color: #666;">
         <p><strong>DOE Simulator v1.0</strong></p>
-        <p>Built with Streamlit • Python • Statistics • Love for Data 📊</p>
-        <p><em>Because guessing is SO last century</em> 🎲</p>
+        <p>Built with Streamlit • Python • Statistics • Love for Data </p>
+        <p><em>Because guessing is SO last century</em> </p>
     </div>
     """, unsafe_allow_html=True)
 
