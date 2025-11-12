@@ -37,7 +37,7 @@ from src.sampling import (
 from src.utils.data_loader import load_ecommerce_data
 
 # Page config
-st.set_page_config(page_title="Sampling Methods", page_icon="🎲", layout="wide")
+st.set_page_config(page_title="Sampling Methods", page_icon="**", layout="wide")
 
 # Custom CSS - SLATE PROFESSIONAL THEME
 st.markdown("""
@@ -113,7 +113,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Header
-st.title("🎲 Sampling Methods")
+st.title("** Sampling Methods")
 st.markdown("Explore different sampling techniques, assign treatment, and check balance.")
 
 # Load data
@@ -138,7 +138,7 @@ if df is not None:
     )
 
     st.sidebar.markdown("---")
-    st.sidebar.subheader("📊 Sample Size Configuration")
+    st.sidebar.subheader(" Sample Size Configuration")
 
     # IMPROVEMENT 1: Separate treatment and control sample sizes
     treatment_sample_size = st.sidebar.number_input(
@@ -161,11 +161,11 @@ if df is not None:
 
     total_sample_size = treatment_sample_size + control_sample_size
 
-    st.sidebar.info(f"📌 **Total Sample Size:** {total_sample_size:,}")
+    st.sidebar.info(f" **Total Sample Size:** {total_sample_size:,}")
 
     # IMPROVEMENT 1: Multi-select for balance variables
     st.sidebar.markdown("---")
-    st.sidebar.subheader("⚖️ Variables to Balance")
+    st.sidebar.subheader(" Variables to Balance")
 
     all_balance_vars = [
         'age', 'gender', 'location', 'income_level', 'education',
@@ -205,9 +205,9 @@ if df is not None:
 
         # Show info about multi-variable stratification
         if len(stratify_vars) > 1:
-            st.sidebar.info(f"📊 Creating cross-strata from {len(stratify_vars)} variables")
+            st.sidebar.info(f" Creating cross-strata from {len(stratify_vars)} variables")
         elif len(stratify_vars) == 0:
-            st.sidebar.warning("⚠️ Please select at least one stratification variable")
+            st.sidebar.warning(" Please select at least one stratification variable")
 
     elif sampling_method == "Cluster Sampling":
         # Keep single-select for clustering (this is CORRECT!)
@@ -224,11 +224,11 @@ if df is not None:
             value=min(2, len(available_clusters)) if len(available_clusters) > 0 else 1
         )
 
-        st.sidebar.info("💡 **Why Single Variable?**\n\nClusters are natural groups (cities, stores, schools). Multi-level clustering (e.g., cities → neighborhoods) is advanced and handled differently.")
+        st.sidebar.info(" **Why Single Variable?**\n\nClusters are natural groups (cities, stores, schools). Multi-level clustering (e.g., cities → neighborhoods) is advanced and handled differently.")
 
     # Run sampling AND assignment button (ONE STEP!)
     run_sampling_and_assignment = st.sidebar.button(
-        "🎯 Run Sampling & Assign Treatment",
+        " Run Sampling & Assign Treatment",
         type="primary",
         width="stretch",
         help="Samples treatment and control groups separately from the population"
@@ -269,7 +269,7 @@ if df is not None:
                 # Combine
                 final_sample = pd.concat([treatment_sample, control_sample], ignore_index=True)
 
-            st.success(f"✅ Sampling & Assignment Complete!")
+            st.success(f" Sampling & Assignment Complete!")
 
             # Store in session state
             st.session_state['sample_with_treatment'] = final_sample
@@ -283,7 +283,7 @@ if df is not None:
             st.session_state['balance_covariates'] = balance_variables
 
             # Display summary
-            st.subheader("📊 Sample Summary")
+            st.subheader(" Sample Summary")
 
             col1, col2, col3, col4 = st.columns(4)
 
@@ -416,9 +416,9 @@ if df is not None:
 
                 # Display stratification info
                 if len(stratify_vars) == 1:
-                    st.info(f"📌 Stratified by: **{stratify_vars[0]}**")
+                    st.info(f" Stratified by: **{stratify_vars[0]}**")
                 else:
-                    st.info(f"📌 Cross-stratified by: **{' × '.join(stratify_vars)}** ({n_strata} combined strata)")
+                    st.info(f" Cross-stratified by: **{' × '.join(stratify_vars)}** ({n_strata} combined strata)")
 
             # Store in session state
             st.session_state['sample_with_treatment'] = final_sample
@@ -432,7 +432,7 @@ if df is not None:
             st.session_state['balance_covariates'] = balance_variables
 
             # Display summary
-            st.subheader("📊 Sample Summary")
+            st.subheader(" Sample Summary")
 
             col1, col2, col3, col4 = st.columns(4)
 
@@ -452,7 +452,7 @@ if df is not None:
 
                 # Stratification balance comparison
                 strata_label = ' × '.join(stratify_vars) if len(stratify_vars) > 1 else stratify_vars[0]
-                st.subheader(f"📊 Stratification Balance ({strata_label})")
+                st.subheader(f" Stratification Balance ({strata_label})")
 
                 # Recreate combined strata for display
                 if len(stratify_vars) == 1:
@@ -575,7 +575,7 @@ if df is not None:
                 # Efficiency metrics
                 if len(stratify_vars) > 1:
                     st.markdown("---")
-                    st.markdown("**🎯 Multi-Variable Stratification Benefits:**")
+                    st.markdown("** Multi-Variable Stratification Benefits:**")
                     col1, col2, col3 = st.columns(3)
 
                     with col1:
@@ -644,7 +644,7 @@ if df is not None:
             st.session_state['balance_covariates'] = balance_variables
 
             # Display summary
-            st.subheader("📊 Sample Summary")
+            st.subheader(" Sample Summary")
 
             col1, col2, col3, col4 = st.columns(4)
 
@@ -702,7 +702,7 @@ if df is not None:
 
             st.success(f"✅ Cluster Sampling & Assignment Complete!")
 
-            st.info(f"📌 Selected {len(selected_clusters)} clusters: {list(selected_clusters)}")
+            st.info(f" Selected {len(selected_clusters)} clusters: {list(selected_clusters)}")
 
             # Store in session state
             st.session_state['sample_with_treatment'] = final_sample
@@ -716,7 +716,7 @@ if df is not None:
             st.session_state['balance_covariates'] = balance_variables
 
             # Display summary
-            st.subheader("📊 Sample Summary")
+            st.subheader(" Sample Summary")
 
             col1, col2, col3, col4 = st.columns(4)
 
@@ -756,7 +756,7 @@ if df is not None:
         """, unsafe_allow_html=True)
 
         st.markdown("---")
-        st.header("💾 Download Sample")
+        st.header(" Download Sample")
 
         col1, col2 = st.columns(2)
 
@@ -766,7 +766,7 @@ if df is not None:
 
             csv = sample_to_download.to_csv(index=False)
             st.download_button(
-                label="📥 Download Sample with Treatment Assignment",
+                label=" Download Sample with Treatment Assignment",
                 data=csv,
                 file_name=f"sample_{sampling_method.lower().replace(' ', '_')}_with_treatment.csv",
                 mime="text/csv",
@@ -776,7 +776,7 @@ if df is not None:
             st.info("✅ CSV includes 'treatment_group' and 'treatment_label' columns")
 
         with col2:
-            st.markdown("### 📊 Sample Info")
+            st.markdown("###  Sample Info")
             st.write(f"**Method:** {sampling_method}")
             st.write(f"**Total Sample:** {len(sample_to_download):,}")
             st.write(f"**Treatment:** {(sample_to_download['treatment_group']==1).sum():,}")
@@ -786,7 +786,7 @@ if df is not None:
 
         # Preview of sample with treatment
         st.markdown("---")
-        st.subheader("👀 Sample Preview (with Treatment Assignment)")
+        st.subheader(" Sample Preview (with Treatment Assignment)")
 
         # Show treatment distribution
         preview_df = st.session_state['sample_with_treatment']
@@ -816,7 +816,7 @@ if df is not None:
     elif 'current_sample' in st.session_state and st.session_state['current_sample'] is not None:
         # Sample created but no treatment assigned yet
         st.markdown("---")
-        st.info("👆 **Next Step:** Configure treatment assignment above and click '🎯 Assign Treatment & Control'")
+        st.info("👆 **Next Step:** Configure treatment assignment above and click ' Assign Treatment & Control'")
 
 else:
     st.error("Failed to load dataset.")
