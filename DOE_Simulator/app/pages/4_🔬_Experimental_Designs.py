@@ -31,7 +31,7 @@ from src.experimental_designs.response_surface import CentralCompositeDesign, Bo
 from src.utils.data_loader import load_ecommerce_data
 
 # Page config
-st.set_page_config(page_title="Experimental Designs", page_icon="🔬", layout="wide")
+st.set_page_config(page_title="Experimental Designs", page_icon="**", layout="wide")
 
 # Custom CSS - SLATE PROFESSIONAL THEME
 st.markdown("""
@@ -186,7 +186,7 @@ if df is not None:
             min_value=2,
             max_value=10,
             value=4,
-            help="🎯 Number of different treatments to compare (including control). Example: Control + 3 treatments = 4 total"
+            help=" Number of different treatments to compare (including control). Example: Control + 3 treatments = 4 total"
         )
 
         treatment_names = []
@@ -210,7 +210,7 @@ if df is not None:
         allocation = st.sidebar.radio(
             "Sample Allocation",
             ["Equal", "Custom"],
-            help="📊 Equal: Same sample size for each treatment. Custom: Specify different sizes per treatment (useful for unequal designs)"
+            help=" Equal: Same sample size for each treatment. Custom: Specify different sizes per treatment (useful for unequal designs)"
         )
 
         sample_sizes = {}
@@ -241,7 +241,7 @@ if df is not None:
         random_seed = st.sidebar.number_input("Random Seed", value=42, min_value=0, max_value=9999)
 
         # Create design button
-        if st.sidebar.button("🎯 Create CRD", type="primary"):
+        if st.sidebar.button(" Create CRD", type="primary"):
             with st.spinner("Creating Completely Randomized Design..."):
                 # Create design
                 crd = CompletelyRandomizedDesign(random_seed=random_seed)
@@ -268,7 +268,7 @@ if df is not None:
             crd = st.session_state['design_object']
 
             st.markdown("---")
-            st.subheader("📊 Design Summary")
+            st.subheader(" Design Summary")
 
             # Metrics
             col1, col2, col3, col4 = st.columns(4)
@@ -311,7 +311,7 @@ if df is not None:
 
             # Simulate response and analyze
             st.markdown("---")
-            st.subheader("🧪 Simulate Response & Analyze")
+            st.subheader(" Simulate Response & Analyze")
 
             col1, col2 = st.columns(2)
 
@@ -331,7 +331,7 @@ if df is not None:
                     help="How much effect does the best treatment have?"
                 )
 
-            if st.button("📈 Simulate & Analyze"):
+            if st.button(" Simulate & Analyze"):
                 # Simulate response with treatment effects
                 design['response'] = design[response_var].copy() if response_var in design.columns else np.random.randn(len(design)) * 10 + 50
 
@@ -351,7 +351,7 @@ if df is not None:
 
                 # Display results
                 st.markdown("---")
-                st.subheader("📊 ANOVA Results")
+                st.subheader(" ANOVA Results")
 
                 col1, col2, col3 = st.columns(3)
 
@@ -434,9 +434,9 @@ if df is not None:
         )
 
         if len(block_vars) == 0:
-            st.sidebar.warning("⚠️ Please select at least one blocking variable")
+            st.sidebar.warning(" Please select at least one blocking variable")
         elif len(block_vars) > 1:
-            st.sidebar.info(f"📊 Creating combined blocks from {len(block_vars)} variables")
+            st.sidebar.info(f" Creating combined blocks from {len(block_vars)} variables")
 
         # Treatment configuration
         n_treatments = st.sidebar.number_input(
@@ -460,7 +460,7 @@ if df is not None:
         allocation_rbd = st.sidebar.radio(
             "Treatment Allocation",
             ["Equal (Balanced RBD)", "Custom (Unequal Sizes)"],
-            help="📊 Equal: Each treatment gets same number of units per block. Custom: Specify different allocation"
+            help=" Equal: Each treatment gets same number of units per block. Custom: Specify different allocation"
         )
 
         replications = st.sidebar.number_input(
@@ -468,13 +468,13 @@ if df is not None:
             min_value=1,
             max_value=5,
             value=1,
-            help="🔄 Number of times each treatment is replicated within each block. More replications = more power to detect effects"
+            help=" Number of times each treatment is replicated within each block. More replications = more power to detect effects"
         )
 
         random_seed = st.sidebar.number_input("Random Seed", value=42, min_value=0, max_value=9999, key="rbd_seed")
 
         # Create design button
-        if st.sidebar.button("🎯 Create RBD", type="primary"):
+        if st.sidebar.button(" Create RBD", type="primary"):
             if len(block_vars) == 0:
                 st.error("❌ Please select at least one blocking variable from the sidebar")
             else:
@@ -509,7 +509,7 @@ if df is not None:
                     st.success(f"✅ RBD created with blocking by **{block_vars[0]}**!")
                 else:
                     st.success(f"✅ RBD created with combined blocking by **{' × '.join(block_vars)}**!")
-                    st.info(f"📊 Created {design['_block_'].nunique()} combined blocks")
+                    st.info(f" Created {design['_block_'].nunique()} combined blocks")
 
         # Display design
         if 'current_design' in st.session_state and st.session_state.get('design_type') == 'RBD':
@@ -520,7 +520,7 @@ if df is not None:
             design = design[design['treatment'].notna()]
 
             st.markdown("---")
-            st.subheader("📊 Design Summary")
+            st.subheader(" Design Summary")
 
             col1, col2, col3, col4 = st.columns(4)
 
@@ -577,7 +577,7 @@ if df is not None:
                 key="rbd_effect"
             )
 
-            if st.button("📈 Simulate & Analyze", key="rbd_analyze"):
+            if st.button(" Simulate & Analyze", key="rbd_analyze"):
                 # Simulate response
                 design['response'] = design[response_var].copy() if response_var in design.columns else np.random.randn(len(design)) * 10 + 50
 
@@ -600,7 +600,7 @@ if df is not None:
 
                 # Display results
                 st.markdown("---")
-                st.subheader("📊 Two-Way ANOVA Results")
+                st.subheader(" Two-Way ANOVA Results")
 
                 # Treatment effect
                 st.markdown("**Treatment Effect:**")
@@ -662,7 +662,7 @@ if df is not None:
             min_value=2,
             max_value=4,
             value=3,
-            help="📈 Number of independent variables to test. Factorial design tests all combinations of factor levels"
+            help=" Number of independent variables to test. Factorial design tests all combinations of factor levels"
         )
 
         factors = {}
@@ -697,13 +697,13 @@ if df is not None:
             min_value=1,
             max_value=10,
             value=2,
-            help="🔄 Number of times each treatment combination is repeated. Replications improve precision and allow estimation of pure error"
+            help=" Number of times each treatment combination is repeated. Replications improve precision and allow estimation of pure error"
         )
 
         random_seed = st.sidebar.number_input("Random Seed", value=42, min_value=0, max_value=9999, key="factorial_seed")
 
         # Create design
-        if st.sidebar.button("🎯 Create Factorial Design", type="primary"):
+        if st.sidebar.button(" Create Factorial Design", type="primary"):
             with st.spinner("Creating Factorial Design..."):
                 factorial = FactorialDesign(random_seed=random_seed)
 
@@ -727,7 +727,7 @@ if df is not None:
             factors = st.session_state['factors']
 
             st.markdown("---")
-            st.subheader("📊 Design Summary")
+            st.subheader(" Design Summary")
 
             summary = factorial.get_design_summary()
 
@@ -754,9 +754,9 @@ if df is not None:
 
             # Simulate response
             st.markdown("---")
-            st.subheader("🧪 Simulate Response & Analyze")
+            st.subheader(" Simulate Response & Analyze")
 
-            if st.button("📈 Simulate & Analyze Effects", key="factorial_analyze"):
+            if st.button(" Simulate & Analyze Effects", key="factorial_analyze"):
                 # Simulate response with main effects and interactions
                 design['response'] = 100  # Baseline
 
@@ -791,7 +791,7 @@ if df is not None:
                 )
 
                 st.markdown("---")
-                st.subheader("📊 Main Effects")
+                st.subheader(" Main Effects")
 
                 for factor, effect in results['main_effects'].items():
                     with st.expander(f"**{factor}** (F={effect['f_statistic']:.2f}, p={effect['p_value']:.4f})"):
@@ -809,7 +809,7 @@ if df is not None:
                             for level, mean in effect['means'].items():
                                 st.write(f"- {level}: {mean:.2f}")
 
-                st.subheader("📊 Interaction Effects")
+                st.subheader(" Interaction Effects")
 
                 if results['interactions']:
                     for interaction, effect in results['interactions'].items():
@@ -846,7 +846,7 @@ if df is not None:
         design_mode = st.sidebar.radio(
             "Design Mode",
             ["Common Designs (Recommended)", "Custom"],
-            help="🎯 Common Designs: Pre-optimized high-resolution designs. Custom: Specify your own parameters"
+            help=" Common Designs: Pre-optimized high-resolution designs. Custom: Specify your own parameters"
         )
 
         if design_mode == "Common Designs (Recommended)":
@@ -856,7 +856,7 @@ if df is not None:
                 "Select Design",
                 list(design_options.keys()),
                 format_func=lambda x: design_options[x],
-                help="📚 Pre-defined efficient designs with optimal resolution"
+                help=" Pre-defined efficient designs with optimal resolution"
             )
 
             design_info = COMMON_DESIGNS[selected_design]
@@ -873,14 +873,14 @@ if df is not None:
                 min_value=3,
                 max_value=10,
                 value=5,
-                help="📊 Total number of factors to screen"
+                help=" Total number of factors to screen"
             )
 
             n_runs = st.sidebar.select_slider(
                 "Number of Runs",
                 options=[8, 16, 32, 64, 128],
                 value=16,
-                help="🏃 Must be power of 2. Fewer runs = more aliasing"
+                help=" Must be power of 2. Fewer runs = more aliasing"
             )
 
             generators = None  # Will use defaults
@@ -888,14 +888,14 @@ if df is not None:
         factor_names = st.sidebar.text_input(
             "Factor Names (comma-separated)",
             value=", ".join([f"Factor_{chr(65+i)}" for i in range(n_factors)]),
-            help="📝 Optional: Customize factor names"
+            help=" Optional: Customize factor names"
         ).split(",")
         factor_names = [name.strip() for name in factor_names[:n_factors]]
 
         random_seed = st.sidebar.number_input("Random Seed", value=42, min_value=0, max_value=9999, key="ffd_seed")
 
         # Create design
-        if st.sidebar.button("🎯 Create Fractional Factorial", type="primary"):
+        if st.sidebar.button("Create Fractional Factorial", type="primary"):
             with st.spinner("Creating Fractional Factorial Design..."):
                 ffd = FractionalFactorialDesign(random_seed=random_seed)
 
@@ -921,7 +921,7 @@ if df is not None:
             summary = ffd.get_design_summary()
 
             st.markdown("---")
-            st.subheader("📊 Design Summary")
+            st.subheader(" Design Summary")
 
             col1, col2, col3, col4 = st.columns(4)
 
@@ -941,7 +941,7 @@ if df is not None:
             full_factorial_runs = 2 ** summary['n_factors']
             efficiency = (1 - summary['n_runs'] / full_factorial_runs) * 100
 
-            st.success(f"🎉 **Efficiency Gain:** {efficiency:.1f}% fewer runs than full factorial ({summary['n_runs']} vs {full_factorial_runs})")
+            st.success(f" **Efficiency Gain:** {efficiency:.1f}% fewer runs than full factorial ({summary['n_runs']} vs {full_factorial_runs})")
 
             # Generators and alias structure
             col1, col2 = st.columns(2)
@@ -969,7 +969,7 @@ if df is not None:
 
             # NEW: Assign design to sample units
             st.markdown("---")
-            st.subheader("🎯 Assign Design to ALL Sample Units")
+            st.subheader(" Assign Design to ALL Sample Units")
 
             st.info("💡 Allocate all 20,000 customers across these treatment combinations")
 
@@ -985,7 +985,7 @@ if df is not None:
                 key="ffd_allocation_mode"
             )
 
-            if st.button("🎲 Assign All Units to Design", key="ffd_assign"):
+            if st.button(" Assign All Units to Design", key="ffd_assign"):
                 np.random.seed(random_seed)
 
                 # Assign all units to treatment combinations
@@ -1025,7 +1025,7 @@ if df is not None:
             if 'design_with_units' in st.session_state and st.session_state.get('design_type') == 'Fractional_Factorial':
                 assigned_design = st.session_state['design_with_units']
 
-                st.subheader("👥 All Sample Units with Treatment Assignments")
+                st.subheader(" All Sample Units with Treatment Assignments")
 
                 # Show allocation summary
                 col1, col2, col3 = st.columns(3)
@@ -1061,7 +1061,7 @@ if df is not None:
                 # Download assigned design
                 csv_assigned = assigned_design.to_csv(index=False)
                 st.download_button(
-                    label="📥 Download All Units with Assignments",
+                    label=" Download All Units with Assignments",
                     data=csv_assigned,
                     file_name=f"fractional_factorial_assigned_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
                     mime="text/csv",
@@ -1091,13 +1091,13 @@ if df is not None:
             min_value=2,
             max_value=5,
             value=3,
-            help="🎯 Number of factors to optimize (2-5 recommended)"
+            help=" Number of factors to optimize (2-5 recommended)"
         )
 
         ccd_type = st.sidebar.selectbox(
             "CCD Type",
             ["Rotatable", "Face-Centered", "Orthogonal"],
-            help="🔄 Rotatable: Equal prediction variance. Face-Centered: Factors stay within [-1,1]. Orthogonal: Orthogonal estimates"
+            help=" Rotatable: Equal prediction variance. Face-Centered: Factors stay within [-1,1]. Orthogonal: Orthogonal estimates"
         )
 
         n_center = st.sidebar.slider(
@@ -1105,7 +1105,7 @@ if df is not None:
             min_value=3,
             max_value=10,
             value=5,
-            help="🎯 Replicated center points for pure error estimation. 3-6 recommended"
+            help=" Replicated center points for pure error estimation. 3-6 recommended"
         )
 
         factor_names = st.sidebar.text_input(
@@ -1117,7 +1117,7 @@ if df is not None:
 
         random_seed = st.sidebar.number_input("Random Seed", value=42, min_value=0, max_value=9999, key="ccd_seed")
 
-        if st.sidebar.button("🎯 Create CCD", type="primary"):
+        if st.sidebar.button(" Create CCD", type="primary"):
             with st.spinner("Creating Central Composite Design..."):
                 ccd = CentralCompositeDesign(random_seed=random_seed)
 
@@ -1133,7 +1133,7 @@ if df is not None:
                 st.session_state['design_object'] = ccd
                 st.session_state['design_type'] = 'CCD'
 
-            st.success("✅ Central Composite Design created!")
+            st.success(" Central Composite Design created!")
 
         # Display design
         if 'current_design' in st.session_state and st.session_state.get('design_type') == 'CCD':
@@ -1142,7 +1142,7 @@ if df is not None:
             summary = ccd.get_design_summary()
 
             st.markdown("---")
-            st.subheader("📊 Design Summary")
+            st.subheader(" Design Summary")
 
             col1, col2, col3, col4, col5 = st.columns(5)
 
@@ -1161,7 +1161,7 @@ if df is not None:
             with col5:
                 st.metric("Total Runs", summary['total_runs'])
 
-            st.info(f"📐 Alpha (axial distance): {summary['alpha']:.3f} | Rotatability: {summary['rotatability']}")
+            st.info(f" Alpha (axial distance): {summary['alpha']:.3f} | Rotatability: {summary['rotatability']}")
 
             # Design matrix
             st.markdown("---")
@@ -1172,9 +1172,9 @@ if df is not None:
 
             # NEW: Assign design to sample units for CCD
             st.markdown("---")
-            st.subheader("🎯 Assign Design to ALL Sample Units")
+            st.subheader(" Assign Design to ALL Sample Units")
 
-            st.info("💡 Allocate all 20,000 customers across these treatment combinations")
+            st.info(" Allocate all 20,000 customers across these treatment combinations")
 
             # Get unique treatment combinations (exclude point_type, replication, order columns)
             unique_combos = design[summary['factor_names']].drop_duplicates().reset_index(drop=True)
@@ -1182,7 +1182,7 @@ if df is not None:
 
             st.write(f"**{n_combos} unique treatment combinations** (factorial + axial + center points)")
 
-            if st.button("🎲 Assign All Units to Design", key="ccd_assign"):
+            if st.button(" Assign All Units to Design", key="ccd_assign"):
                 np.random.seed(random_seed)
 
                 # Assign all units to treatment combinations
@@ -1210,7 +1210,7 @@ if df is not None:
             if 'design_with_units' in st.session_state and st.session_state.get('design_type') == 'CCD':
                 assigned_design = st.session_state['design_with_units']
 
-                st.subheader("👥 All Sample Units with Treatment Assignments")
+                st.subheader(" All Sample Units with Treatment Assignments")
 
                 # Show allocation summary
                 col1, col2, col3 = st.columns(3)
@@ -1246,7 +1246,7 @@ if df is not None:
                 # Download assigned design
                 csv_assigned = assigned_design.to_csv(index=False)
                 st.download_button(
-                    label="📥 Download All Units with Assignments",
+                    label=" Download All Units with Assignments",
                     data=csv_assigned,
                     file_name=f"ccd_assigned_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
                     mime="text/csv",
@@ -1276,7 +1276,7 @@ if df is not None:
             min_value=3,
             max_value=7,
             value=3,
-            help="🎯 Number of factors (requires at least 3)"
+            help=" Number of factors (requires at least 3)"
         )
 
         n_center = st.sidebar.slider(
@@ -1284,7 +1284,7 @@ if df is not None:
             min_value=3,
             max_value=10,
             value=3,
-            help="🎯 Center point replicates for pure error",
+            help=" Center point replicates for pure error",
             key="bbd_center"
         )
 
@@ -1297,7 +1297,7 @@ if df is not None:
 
         random_seed = st.sidebar.number_input("Random Seed", value=42, min_value=0, max_value=9999, key="bbd_seed")
 
-        if st.sidebar.button("🎯 Create Box-Behnken", type="primary"):
+        if st.sidebar.button(" Create Box-Behnken", type="primary"):
             with st.spinner("Creating Box-Behnken Design..."):
                 bbd = BoxBehnkenDesign(random_seed=random_seed)
 
@@ -1321,7 +1321,7 @@ if df is not None:
             summary = bbd.get_design_summary()
 
             st.markdown("---")
-            st.subheader("📊 Design Summary")
+            st.subheader(" Design Summary")
 
             col1, col2, col3, col4 = st.columns(4)
 
@@ -1347,9 +1347,9 @@ if df is not None:
 
             # NEW: Assign design to sample units for Box-Behnken
             st.markdown("---")
-            st.subheader("🎯 Assign Design to ALL Sample Units")
+            st.subheader(" Assign Design to ALL Sample Units")
 
-            st.info("💡 Allocate all 20,000 customers across these treatment combinations")
+            st.info(" Allocate all 20,000 customers across these treatment combinations")
 
             # Get unique treatment combinations (exclude point_type, order columns)
             unique_combos = design[summary['factor_names']].drop_duplicates().reset_index(drop=True)
@@ -1357,7 +1357,7 @@ if df is not None:
 
             st.write(f"**{n_combos} unique treatment combinations** (edge + center points)")
 
-            if st.button("🎲 Assign All Units to Design", key="bbd_assign"):
+            if st.button(" Assign All Units to Design", key="bbd_assign"):
                 np.random.seed(random_seed)
 
                 # Assign all units to treatment combinations
@@ -1385,7 +1385,7 @@ if df is not None:
             if 'design_with_units' in st.session_state and st.session_state.get('design_type') == 'BBD':
                 assigned_design = st.session_state['design_with_units']
 
-                st.subheader("👥 All Sample Units with Treatment Assignments")
+                st.subheader(" All Sample Units with Treatment Assignments")
 
                 # Show allocation summary
                 col1, col2, col3 = st.columns(3)
@@ -1421,7 +1421,7 @@ if df is not None:
                 # Download assigned design
                 csv_assigned = assigned_design.to_csv(index=False)
                 st.download_button(
-                    label="📥 Download All Units with Assignments",
+                    label=" Download All Units with Assignments",
                     data=csv_assigned,
                     file_name=f"box_behnken_assigned_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
                     mime="text/csv",
@@ -1431,7 +1431,7 @@ if df is not None:
     # Issue #7 FIX: Enhanced export with treatment assignments and metadata
     if 'current_design' in st.session_state:
         st.markdown("---")
-        st.header("💾 Export Design & Assignments")
+        st.header(" Export Design & Assignments")
 
         design = st.session_state['current_design']
         design_type_label = st.session_state.get('design_type', 'experiment')
@@ -1439,11 +1439,11 @@ if df is not None:
         col1, col2 = st.columns(2)
 
         with col1:
-            st.markdown("### 📊 Design Matrix")
+            st.markdown("###  Design Matrix")
 
             csv = design.to_csv(index=False)
             st.download_button(
-                label="📥 Download Design Matrix (CSV)",
+                label=" Download Design Matrix (CSV)",
                 data=csv,
                 file_name=f"design_{design_type_label}_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
                 mime="text/csv",
@@ -1451,10 +1451,10 @@ if df is not None:
                 help="Downloads the complete design matrix with all factor levels and run orders"
             )
 
-            st.info(f"✅ Includes: {len(design)} runs with all factor assignments")
+            st.info(f" Includes: {len(design)} runs with all factor assignments")
 
         with col2:
-            st.markdown("### 📋 Design Info")
+            st.markdown("###  Design Info")
 
             # Create metadata file
             if 'design_object' in st.session_state:
@@ -1480,11 +1480,11 @@ Design Parameters:
                     help="Downloads design metadata including parameters and configuration"
                 )
 
-                st.info("✅ Includes: Full design specifications")
+                st.info(" Includes: Full design specifications")
 
         # Show preview
         st.markdown("---")
-        st.subheader("👀 Design Preview")
+        st.subheader(" Design Preview")
 
         st.dataframe(design.head(20), width="stretch")
 
