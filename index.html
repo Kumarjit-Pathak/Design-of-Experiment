@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design of Experiments: Because Guessing is SO Last Century 🎲</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.8;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3em;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            opacity: 0.95;
+            font-style: italic;
+        }
+
+        .author-info {
+            margin-top: 30px;
+            font-size: 0.95em;
+            opacity: 0.9;
+        }
+
+        article {
+            padding: 50px 40px;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2em;
+            color: #667eea;
+            margin: 50px 0 25px 0;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        h3 {
+            font-size: 1.6em;
+            color: #764ba2;
+            margin: 35px 0 20px 0;
+            font-weight: 700;
+        }
+
+        p {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border-left: 5px solid #f39c12;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .fun-fact {
+            background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border-left: 5px solid #00b894;
+            font-style: italic;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border-left: 5px solid #d63031;
+        }
+
+        .formula {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            border: 2px dashed #667eea;
+            text-align: center;
+            font-size: 1.1em;
+        }
+
+        ul, ol {
+            margin: 20px 0 20px 40px;
+        }
+
+        li {
+            margin: 10px 0;
+        }
+
+        .emoji {
+            font-size: 1.3em;
+        }
+
+        .section-intro {
+            font-size: 1.15em;
+            font-weight: 600;
+            color: #555;
+            margin: 25px 0;
+            padding-left: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 700;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .quote {
+            font-size: 1.3em;
+            font-style: italic;
+            color: #555;
+            padding: 30px;
+            margin: 40px 0;
+            border-left: 5px solid #667eea;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .references {
+            background: #f8f9fa;
+            padding: 30px;
+            margin-top: 50px;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+
+        .references h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .ref-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .ref-list li {
+            margin: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .ref-list li:before {
+            content: "📚";
+            position: absolute;
+            left: 0;
+        }
+
+        /* Video container styles to match the existing design */
+        .video-container {
+            margin: 30px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #667eea;
+        }
+
+        .video-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            article {
+                padding: 30px 20px;
+            }
+
+            h2 {
+                font-size: 1.7em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎲 Design of Experiments: The Art of Not Screwing Up Your Research (A Survival Guide) 🔬</h1>
+            <p class="subtitle">Or: How I Learned to Stop Guessing and Love Statistics</p>
+            <div class="author-info">
+                Consolidated from multiple sources | Because one version was clearly not enough 😅
+            </div>
+        </header>
+
+        <article>
+            <div class="section-intro">
+                <span class="emoji">🎪</span> Welcome to the greatest show on Earth (well, in statistics anyway)! If you've ever wondered how scientists figure out if their brilliant ideas actually work or if they're just really lucky, you're in the right place.
+            </div>
+
+            <p>Let's be honest: conducting experiments without proper design is like trying to bake a cake by randomly throwing ingredients into an oven and hoping for the best. Sure, you MIGHT get lucky once, but mostly you'll end up with either a rock-hard disaster or a gooey mess that even your dog won't eat.</p>
+
+            <p>Enter <strong>Design of Experiments (DOE)</strong> – the superhero methodology that has been saving researchers from embarrassing themselves since Sir Ronald Fisher decided farming needed more math back in the 1920s. And boy, are we glad he did!</p>
+
+            <h2>🎯 What the Heck is Design of Experiments Anyway?</h2>
+
+            <p>Imagine you're a chef trying to perfect the ultimate burger. You could change one thing at a time (the bun, the patty, the sauce) and taste-test each variation. That would take approximately 47 years and you'd weigh 300 pounds by the end. OR, you could use DOE to systematically test combinations and figure out the perfect recipe in a fraction of the time, with a fraction of the weight gain. Win-win!</p>
+
+            <div class="highlight-box">
+                <strong>🎓 The Fancy Definition:</strong> Design of Experiments is a systematic, statistical approach to planning, conducting, analyzing, and interpreting controlled experiments to evaluate the factors that control the value of parameters or groups of parameters.
+                <br><br>
+                <strong>🍕 The Pizza Definition:</strong> It's the art of figuring out what actually matters in your experiment without wasting time, money, and everyone's sanity testing every possible combination of everything.
+            </div>
+
+            <h2>🎲 Classical Sampling: Because You Can't Test EVERYTHING</h2>
+
+            <p>Unless you have infinite time, money, and patience (spoiler: you don't), you can't test every single thing. That's where sampling comes in, like choosing which M&Ms to eat from a giant bag. Let's meet our sampling superheroes:</p>
+
+            <h3>🎰 Simple Random Sampling: The Democracy of Data</h3>
+
+            <p>This is the "close your eyes and point" method of sampling, except more scientific. Every item in your population has an equal chance of being selected, like every person has an equal chance of being picked for jury duty (and being equally thrilled about it).</p>
+
+            <div class="formula">
+                P(selection) = 1/N
+                <br><small>(where N = total population, not the number of coffee breaks you've taken)</small>
+            </div>
+
+            <p><strong>When to use it:</strong> When your experimental area is as uniform as a perfectly mowed lawn and you have absolutely no clue what to expect. It's like dating in your twenties – you're just hoping for the best with minimal information.</p>
+
+            <p><strong>When NOT to use it:</strong> When you know there are hotspots, patterns, or your boss's favorite machine that always acts up. That's like knowing one section of the buffet has been sitting out for 4 hours – you want to avoid it, not randomly sample it.</p>
+
+            <div class="video-container">
+                <div class="video-title">📹 Watch: Simple Random Sampling Visualization</div>
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/tL4Lkw3mojA"
+                            title="Simple Random Sampling"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+
+            <h3>🎯 Stratified Random Sampling: Because Not All Groups Are Created Equal</h3>
+
+            <p>This is the "organized chaos" approach. You divide your population into groups (strata) that are similar within themselves but different from each other, then randomly sample from each group. It's like making sure you invite introverts, extroverts, and people-who-say-they're-introverts-but-are-actually-extroverts to your party.</p>
+
+            <div class="fun-fact">
+                <strong>💡 Fun Fact:</strong> Stratified sampling is like organizing your closet by clothing type before deciding what to wear. You wouldn't just grab randomly from a pile (unless you're running late, which, let's be honest, you probably are).
+            </div>
+
+            <p><strong>Real-world example:</strong> In pharmaceutical development, you can't just test a drug on 100 random 25-year-old marathon runners and assume it'll work for everyone. You need to stratify by age, health conditions, and whether they drink their coffee black or with seven pumps of caramel syrup.</p>
+
+            <div class="video-container">
+                <div class="video-title">📹 Watch: Stratified Random Sampling Explained</div>
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/JkaU_g5vP8U"
+                            title="Stratified Random Sampling"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+
+            <h2>🎪 Classical Experimental Designs: The Old-School Cool</h2>
+
+            <h3>🎯 Completely Randomized Design (CRD): Keep It Simple, Scientist</h3>
+
+            <p>CRD is the minimalist's dream. You randomly assign treatments to experimental units. That's it. No fancy tricks, no complications. It's the IKEA furniture of experimental design – straightforward, but you better hope all your pieces are actually the same quality.</p>
+
+            <div class="formula">
+                Y<sub>ij</sub> = μ + τ<sub>i</sub> + ε<sub>ij</sub>
+                <br><small>(Translation: Your result = Average + Treatment effect + Random chaos)</small>
+            </div>
+
+            <p><strong>The Good:</strong> Simple, maximum degrees of freedom, your statistics professor will be proud.</p>
+
+            <p><strong>The Bad:</strong> Only works when your experimental units are as uniform as clones. If they're not, you're in trouble, my friend.</p>
+
+            <p><strong>Perfect for:</strong> Testing if different temperatures affect metal strength when all your metal samples came from the same batch and have no trust issues.</p>
+
+            <div class="warning-box">
+                <strong>⚠️ Warning:</strong> Using CRD when your units are heterogeneous is like assuming all your friends have the same sense of humor. One person's "hilarious" is another person's "please stop talking."
+            </div>
+
+            <h3>🏗️ Randomized Block Design (RBD): The Organized Friend of the Group</h3>
+
+            <p>RBD is what happens when CRD goes to therapy and learns to deal with its issues. You group similar experimental units into "blocks" and randomize within each block. It's like organizing a tournament where you make sure each bracket has a mix of skill levels, not all pros in one group.</p>
+
+            <div class="formula">
+                Y<sub>ij</sub> = μ + τ<sub>i</sub> + β<sub>j</sub> + ε<sub>ij</sub>
+                <br><small>(Now with added β<sub>j</sub> = block effect, because life is complicated)</small>
+            </div>
+
+            <p><strong>When to use it:</strong> When you know there's a nuisance factor messing with your results. Like when you're testing recipes but different ovens behave differently – each oven becomes a block, and you test all recipes in each oven.</p>
+
+            <p><strong>Real-world example:</strong> In semiconductor manufacturing, each furnace run is like a moody teenager – it's different every time. By blocking on furnace runs, you isolate that moodiness from the actual treatment effects you care about.</p>
+
+            <div class="fun-fact">
+                <strong>💡 Statistician's Secret:</strong> RBD can make your confidence intervals shorter than your last relationship. And that's a good thing in statistics!
+            </div>
+
+            <div class="video-container">
+                <div class="video-title">📹 Watch: Randomized Block Design in Action</div>
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/v-1T8u1s8No"
+                            title="Randomized Block Design"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+
+            <h3>🎨 Latin Square Design: The Sudoku of Experiments</h3>
+
+            <p>Latin Square is what happens when blocking has an overachiever sibling. Instead of controlling one nuisance factor, it controls TWO. It's arranged in a square where each treatment appears exactly once in each row and column, like Sudoku but with science instead of numbers.</p>
+
+            <p><strong>Perfect for:</strong> When you have two sources of variation to control. Like testing fertilizers when both soil type (rows) and sun exposure (columns) matter, but you're really interested in which fertilizer wins the plant-growing championship.</p>
+
+            <p><strong>Not perfect for:</strong> When treatments and blocks interact. If your fertilizer behaves completely differently in shade vs. sun, Latin Square will have an existential crisis.</p>
+
+            <div class="highlight-box">
+                <strong>🤓 Bonus Level Unlocked:</strong> Graeco-Latin Square Design controls THREE nuisance factors! It's like Latin Square but wearing a cape. Each cell contains both a Latin letter AND a Greek letter, because regular complicated wasn't complicated enough.
+            </div>
+
+            <div class="video-container">
+                <div class="video-title">📹 Watch: Latin Square Design Tutorial</div>
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/21Zc0RSHVU0"
+                            title="Latin Square Design"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+
+            <h2>🎲 Factorial Designs: When One Factor Just Isn't Enough Drama</h2>
+
+            <h3>🎯 Full Factorial Designs: Testing ALL THE THINGS</h3>
+
+            <p>Full factorial designs are the perfectionists of the DOE world. They test every possible combination of factor levels. If you have 3 factors at 2 levels each, that's 2³ = 8 experiments. Not too bad. But if you have 10 factors? That's 2¹⁰ = 1,024 experiments. Suddenly your PhD timeline just extended by 3 years.</p>
+
+            <p><strong>The superpower:</strong> Factorial designs reveal INTERACTIONS – when factors team up like Marvel superheroes to create effects neither could produce alone. This is the stuff that one-factor-at-a-time experiments miss completely.</p>
+
+            <div class="formula">
+                Y<sub>ijk</sub> = μ + α<sub>i</sub> + β<sub>j</sub> + (αβ)<sub>ij</sub> + ε<sub>ijk</sub>
+                <br><small>(That (αβ) term is the interaction – where the magic happens!)</small>
+            </div>
+
+            <p><strong>Real-world example:</strong> In pharmaceutical tablet manufacturing, compression force and moisture content might each affect tablet hardness. But TOGETHER? They might create a synergistic effect (or antagonistic, depending on how cranky they're feeling).</p>
+
+            <div class="quote">
+                "Testing factors one at a time is like trying to understand a recipe by tasting each ingredient separately. Sure, you know flour is dry and eggs are eggy, but that tells you NOTHING about cake." – Every DOE Expert Ever
+            </div>
+
+            <div class="video-container">
+                <div class="video-title">📹 Watch: Full Factorial Design Explained</div>
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/Lj_PtjNyWSM"
+                            title="Full Factorial Design"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+
+            <div class="video-container">
+                <div class="video-title">📹 Watch: Factorial Design - Coffee Brewing Example</div>
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/rOTwlGsLliE"
+                            title="Factorial Design for Coffee Example"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+
+            <h3>🎲 Fractional Factorial Designs: The Efficiency Hack</h3>
+
+            <p>Fractional factorials are the life hackers of experimental design. Can't afford to run all 1,024 experiments? No problem! Run a carefully selected fraction (like 128 or even 64) and still get useful information. It's like reading the CliffsNotes instead of the entire textbook – you miss some details but pass the exam anyway.</p>
+
+            <p><strong>The catch:</strong> ALIASING. Some effects get confounded together, like when you can't tell if your headache is from stress or that questionable sushi from lunch. Choose your fraction wisely!</p>
+
+            <div class="highlight-box">
+                <strong>📊 Design Resolution Decoder Ring:</strong>
+                <ul>
+                    <li><strong>Resolution III:</strong> Main effects are confused with two-way interactions (chaos level: high)</li>
+                    <li><strong>Resolution IV:</strong> Main effects are clear, but two-way interactions fight among themselves (chaos level: moderate)</li>
+                    <li><strong>Resolution V:</strong> Main effects are clear, two-way interactions are clear, everything's coming up roses! (chaos level: under control)</li>
+                </ul>
+            </div>
+
+            <p><strong>The Sparsity Principle:</strong> Most systems are dominated by main effects and simple interactions. Higher-order interactions (like a 5-way interaction) are rarer than a unicorn riding a skateboard. This is why fractional factorials work!</p>
+
+            <div class="video-container">
+                <div class="video-title">📹 Watch: Partial Factorial Design Demonstration</div>
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/rHLRthMfiJA"
+                            title="Partial Factorial Design"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+
+            <h2>🍰 Response Surface Methodology: The Optimization Olympics</h2>
+
+            <h3>🎯 Central Composite Design (CCD): Finding the Sweet Spot</h3>
+
+            <p>CCD is what you use when you've identified the important factors and now need to find their OPTIMAL settings. It fits a second-order polynomial model, which is fancy talk for "it can find the peak of a hill, not just tell you which direction is uphill."</p>
+
+            <div class="formula">
+                Y = β₀ + Σβᵢxᵢ + Σβᵢᵢxᵢ² + ΣΣβᵢⱼxᵢxⱼ + ε
+                <br><small>(Translation: Your response depends on factors, their squares, and their friendships)</small>
+            </div>
+
+            <p>CCD combines:</p>
+            <ul>
+                <li><strong>Factorial points:</strong> The corners of your experimental space (the boring, predictable locations)</li>
+                <li><strong>Axial/star points:</strong> Points along the axes outside the factorial region (the adventurous explorers)</li>
+                <li><strong>Center points:</strong> Right in the middle, replicated multiple times (the homebodies who stay safe)</li>
+            </ul>
+
+            <div class="fun-fact">
+                <strong>🎂 Baker's Translation:</strong> Finding optimal settings with CCD is like perfecting a cake recipe. You test different amounts of flour and sugar (factorial points), try extreme amounts (axial points), and keep coming back to your baseline recipe (center points) to make sure you're not going crazy.
+            </div>
+
+            <h3>📦 Box-Behnken Design: The Safety-Conscious Alternative</h3>
+
+            <p>Box-Behnken is CCD's risk-averse cousin. It avoids extreme corners where factor combinations might be dangerous, impossible, or just plain stupid. All design points are on the edges of the experimental space, not the corners.</p>
+
+            <p><strong>When to use it:</strong> When going to extremes is a bad idea. Like when mixing maximum amounts of all chemicals might blow up your lab, or running all factors at maximum simultaneously might violate the laws of physics (or your budget).</p>
+
+            <p><strong>Bonus:</strong> Usually requires fewer runs than CCD. Your budget committee will love you!</p>
+
+            <h2>🎖️ Optimal Designs: When Standard Designs Throw Up Their Hands</h2>
+
+            <h3>🏆 D-Optimal Design: The Overachiever</h3>
+
+            <p>D-optimal designs are what happens when you let algorithms design your experiment. They maximize the determinant of the information matrix (det|X'X|), which in human terms means "they squeeze the most information possible from your experimental runs."</p>
+
+            <p><strong>When you NEED D-optimal:</strong></p>
+            <ul>
+                <li>Your experimental region looks like Switzerland (lots of holes and irregular borders)</li>
+                <li>Standard designs require more runs than your budget allows</li>
+                <li>You have a weird mix of continuous, discrete, and categorical factors (the experimental equivalent of a platypus)</li>
+                <li>Some factor combinations would violate physics, safety regulations, or common sense</li>
+            </ul>
+
+            <div class="warning-box">
+                <strong>⚠️ Plot Twist:</strong> D-optimal designs are model-dependent. Specify the wrong model and your "optimal" design is about as useful as a chocolate teapot. Choose wisely!
+            </div>
+
+            <h3>📊 The Alphabet Soup of Optimality</h3>
+
+            <p>Because D-optimal wasn't enough, statisticians created an entire alphabet of optimality criteria:</p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Criterion</th>
+                        <th>What It Does</th>
+                        <th>When to Use It</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>A-optimal</strong></td>
+                        <td>Minimizes average variance of estimates</td>
+                        <td>Screening experiments where you care about all effects equally</td>
+                    </tr>
+                    <tr>
+                        <td><strong>D-optimal</strong></td>
+                        <td>Minimizes volume of confidence region</td>
+                        <td>General purpose optimization, the crowd favorite</td>
+                    </tr>
+                    <tr>
+                        <td><strong>G-optimal</strong></td>
+                        <td>Minimizes maximum prediction variance</td>
+                        <td>When you want good predictions everywhere</td>
+                    </tr>
+                    <tr>
+                        <td><strong>I-optimal</strong></td>
+                        <td>Minimizes average prediction variance</td>
+                        <td>When prediction is your jam</td>
+                    </tr>
+                    <tr>
+                        <td><strong>E-optimal</strong></td>
+                        <td>Maximizes minimum eigenvalue</td>
+                        <td>When you're worried about worst-case scenarios</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="fun-fact">
+                <strong>🎪 Fun Fact:</strong> The Equivalence Theorem proves that D-optimal and G-optimal designs are the same (when treated as continuous measures). It's like discovering that two celebrities you thought were rivals are actually the same person. Mind = blown.
+            </div>
+
+            <h2>🎭 Advanced Designs: For When You've Leveled Up</h2>
+
+            <h3>🎬 Split-Plot Designs: Embracing the Chaos</h3>
+
+            <p>Split-plot designs are what you use when some factors are harder to change than others. It's the "I'm already at the store, might as well buy everything I need" approach to experimentation.</p>
+
+            <div class="quote">
+                "All industrial experiments are split-plot experiments." – Cuthbert Daniel, dropping truth bombs since forever
+            </div>
+
+            <p><strong>Real-world example:</strong> In paper manufacturing, changing the pulp preparation method requires shutting down and restarting half the plant (hard-to-change factor, aka whole-plot factor). But adjusting the cooking temperature? Easy as pie (easy-to-change factor, aka sub-plot factor).</p>
+
+            <p>Split-plot designs have TWO error terms because reality is complicated and refuses to fit into neat statistical boxes. Deal with it.</p>
+
+            <h3>🎯 Taguchi Methods: The Robustness Revolution</h3>
+
+            <p>Genichi Taguchi asked the brilliant question: "What if, instead of trying to control everything, we made our process so robust that variation doesn't matter?" It's like designing a car that runs well whether you use premium or regular gas, drive in Alaska or Arizona.</p>
+
+            <p>Taguchi's approach uses:</p>
+            <ul>
+                <li><strong>Control factors:</strong> Things you can control (temperature, pressure, your coffee intake)</li>
+                <li><strong>Noise factors:</strong> Things you can't control (ambient temperature, supplier variability, Monday mornings)</li>
+                <li><strong>Signal-to-Noise ratios:</strong> A measure of how stable your process is despite the chaos</li>
+            </ul>
+
+            <div class="highlight-box">
+                <strong>🎼 The Signal-to-Noise Symphony:</strong>
+                <ul>
+                    <li><strong>Bigger is better:</strong> S/N = -10 log₁₀[1/n Σ(1/Y²)] (maximize that output!)</li>
+                    <li><strong>Smaller is better:</strong> S/N = -10 log₁₀[1/n ΣY²] (minimize defects!)</li>
+                    <li><strong>Nominal is best:</strong> S/N = -10 log₁₀(σ²) (hit the target!)</li>
+                </ul>
+            </div>
+
+            <p><strong>The Taguchi two-step:</strong></p>
+            <ol>
+                <li>Find control factors that minimize variability (make it stable)</li>
+                <li>Find control factors that hit the target without affecting variability (make it accurate)</li>
+            </ol>
+
+            <h3>🧪 Mixture Designs: When Proportions Matter</h3>
+
+            <p>Mixture designs are the chemistry set of DOE. The factors are ingredients that must sum to 100%, and you're trying to find the perfect recipe. It's like making salad dressing – you need oil, vinegar, and spices, but they have to add up to... well, a complete dressing.</p>
+
+            <div class="formula">
+                x₁ + x₂ + ... + xq = 1
+                <br><small>(Your ingredients must sum to unity, or as we say in English, 100%)</small>
+            </div>
+
+            <p>The design space is a SIMPLEX, which sounds like a disease but is actually just a fancy triangle (in 3D) or higher-dimensional equivalent.</p>
+
+            <p><strong>Perfect for:</strong></p>
+            <ul>
+                <li>Pharmaceutical formulations (how much drug, how much filler, how much "other stuff")</li>
+                <li>Concrete mixes (cement, sand, gravel, water – the recipe for literally everything you're standing on)</li>
+                <li>Cosmetics (because that face cream is a carefully optimized chemical cocktail)</li>
+                <li>Fuel blends (efficiency, cost, and not exploding – all important factors!)</li>
+            </ul>
+
+            <h2>🔧 Power Analysis: Because Hope is Not a Strategy</h2>
+
+            <p>Power analysis answers the question: "How many subjects do I need to prove I'm right (assuming I actually AM right)?"</p>
+
+            <p>The four horsemen of power analysis:</p>
+            <ol>
+                <li><strong>Significance level (α):</strong> Usually 0.05, aka "I'm willing to be wrong 5% of the time"</li>
+                <li><strong>Power (1-β):</strong> Usually 0.80, aka "I want an 80% chance of detecting a real effect"</li>
+                <li><strong>Effect size:</strong> How big a difference you care about</li>
+                <li><strong>Sample size:</strong> The number you're trying to figure out (or the budget you're trying to justify)</li>
+            </ol>
+
+            <div class="warning-box">
+                <strong>⚠️ Underpowered Studies are the Worst:</strong> Running an experiment without enough power is like going fishing with a net full of holes. You might catch something, but probably not. And you've wasted everyone's time and money proving that your net doesn't work.
+            </div>
+
+            <div class="fun-fact">
+                <strong>💡 The Harsh Truth:</strong> If your pilot study shows huge variability and tiny effects, power analysis might tell you that you need 10,000 subjects. That's not the power analysis being mean – that's reality telling you to maybe reconsider your research question or measurement methods.
+            </div>
+
+            <h2>🏭 Industrial Applications: Where the Rubber Meets the Road</h2>
+
+            <h3>💊 Pharmaceuticals: Quality by Design</h3>
+
+            <p>The FDA now expects pharmaceutical companies to actually UNDERSTAND their processes (shocking, we know). Quality by Design (QbD) means using DOE to:</p>
+            <ul>
+                <li>Identify critical process parameters (the knobs that actually matter)</li>
+                <li>Define the design space (the safe zone where your process works)</li>
+                <li>Ensure product quality (so patients get consistent medicine, not pharmaceutical roulette)</li>
+            </ul>
+
+            <p><strong>Real example:</strong> Optimizing tablet compression where the wrong combination of force, moisture, and coating might give you either chalk or Play-Doh, neither of which the FDA appreciates.</p>
+
+            <h3>🔬 Chemical Process Development</h3>
+
+            <p>Chemical engineers use DOE to optimize reaction conditions without blowing up the lab. It's surprisingly important to know which combinations of temperature, pressure, and catalyst concentration are "productive" vs. "catastrophic."</p>
+
+            <h3>🍺 Brewing and Beverage Industry</h3>
+
+            <p>Yes, someone gets paid to optimize beer recipes using DOE. And you thought YOU had a good job! Factorial designs help brewers understand how malt type, hop variety, fermentation temperature, and brewing time interact to produce that perfect IPA you're paying $15 for.</p>
+
+            <h2>🎓 Lessons Learned: The Wisdom of Experience</h2>
+
+            <div class="highlight-box">
+                <h3>The DOE Commandments (From People Who Learned the Hard Way):</h3>
+                <ol>
+                    <li><strong>Randomize, randomize, randomize!</strong> If you don't randomize, the universe will conspire to make your systematic ordering perfectly aligned with some lurking variable you didn't measure.</li>
+                    <li><strong>Block what you can't randomize.</strong> If you can't change something easily, make it a block. Your statistics will thank you.</li>
+                    <li><strong>Replicate for crying out loud!</strong> One data point is an anecdote. Three is science. Choose science.</li>
+                    <li><strong>Center points are your friends.</strong> They detect curvature, provide pure error estimates, and make you look smart in meetings.</li>
+                    <li><strong>Don't confound what you care about.</strong> Sure, running fewer experiments is tempting, but aliasing your main effects with interactions is like trying to save money by skipping crucial car parts. It won't end well.</li>
+                    <li><strong>Check your assumptions.</strong> Normality, constant variance, independence – these aren't just suggestions. Violate them at your own peril (or at least understand what you're doing).</li>
+                    <li><strong>Transform when needed.</strong> If your data looks like a hockey stick, log transform it. If variances are growing with the mean, Box-Cox that puppy. Math can fix a lot of problems.</li>
+                    <li><strong>Sequential experimentation is okay!</strong> You don't have to figure everything out in one massive experiment. Screen first, optimize second. It's called a scientific process for a reason.</li>
+                </ol>
+            </div>
+
+            <h2>🚀 The Future: Where DOE is Heading</h2>
+
+            <p>The future of Design of Experiments is actually pretty cool (for those of us who get excited about efficiency and optimization):</p>
+
+            <ul>
+                <li><strong>Machine Learning Integration:</strong> AI helping design better experiments? Yes, please! Adaptive designs that learn as they go? Even better!</li>
+                <li><strong>Bayesian DOE:</strong> Using prior knowledge to design better experiments. Finally, a way to actually BENEFIT from reading all those papers!</li>
+                <li><strong>Real-time Optimization:</strong> Process analytical technology (PAT) combined with DOE for on-the-fly optimization. It's like having a copilot for your experiments.</li>
+                <li><strong>Multi-objective Optimization:</strong> Because in real life, you're never optimizing just ONE thing. You want maximum quality, minimum cost, fastest production, and zero defects. Dream big!</li>
+                <li><strong>High-throughput Experimentation:</strong> Miniaturization and automation mean you can run DOEs with thousands of experiments. Your grad students are both excited and terrified.</li>
+            </ul>
+
+            <h2>🎯 Critical Points to Remember While Designing an Experiment</h2>
+
+            <p>Alright, future experimental designers, gather 'round for the most important part: the stuff that will save you from face-palming yourself at 2 AM when you realize your data is unusable. Consider this your "DOE Pre-Flight Checklist" – ignore at your own peril!</p>
+
+            <h3>🎲 1. RANDOMIZE LIKE YOUR CAREER DEPENDS ON It (Because It Might)</h3>
+
+            <p>Randomization is the holy grail of experimental design. It's not optional, it's not negotiable, and no, your "systematic" ordering is NOT random. Use a random number generator, draw names from a hat, or sacrifice a goat to the statistics gods if you must – just RANDOMIZE.</p>
+
+            <div class="warning-box">
+                <strong>⚠️ True Horror Story:</strong> A grad student once ran experiments "in order" because it was "more organized." Turns out, the lab temperature systematically increased throughout the day. All their beautiful data? Confounded with temperature. Their degree? Delayed by a year. Don't be that grad student.
+            </div>
+
+            <h3>👥 2. Sample Size: More Than "Seems About Right"</h3>
+
+            <p>Running a power analysis BEFORE your experiment isn't optional – it's insurance against wasting everyone's time. The answer to "How many samples do I need?" is never "5 because that's what fits in my centrifuge."</p>
+
+            <div class="highlight-box">
+                <strong>The Power Analysis Trinity:</strong>
+                <ul>
+                    <li><strong>Too few samples:</strong> You won't detect real effects. You'll conclude nothing matters when actually you just didn't look hard enough.</li>
+                    <li><strong>Too many samples:</strong> You'll find "statistically significant" effects that are practically meaningless, waste resources, and make your lab mates hate you for hogging equipment.</li>
+                    <li><strong>Just right:</strong> Goldilocks would be proud. You detect meaningful effects with appropriate confidence.</li>
+                </ul>
+            </div>
+
+            <h3>🎭 3. Blinding: Not Just for Wine Tasting</h3>
+
+            <p>If you know which sample is which, you WILL unconsciously bias your measurements. It's not because you're dishonest – it's because you're human, and humans are terrible at being objective about things they care about.</p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Blinding Type</th>
+                        <th>What It Means</th>
+                        <th>When You Need It</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Single-blind</strong></td>
+                        <td>Subjects don't know their group</td>
+                        <td>When subject expectations might affect responses (placebo effect city!)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Double-blind</strong></td>
+                        <td>Neither subjects nor experimenters know</td>
+                        <td>When experimenter bias is possible (basically always in subjective measures)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Triple-blind</strong></td>
+                        <td>Data analysts also don't know</td>
+                        <td>High-stakes research where even analysis choices could be biased</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>🔄 4. Replication: One is a Data Point, Three is Science</h3>
+
+            <p>Technical replicates (measuring the same sample multiple times) tell you about measurement error. Biological/experimental replicates (independent samples) tell you about the real variability in your system. You need BOTH, but don't confuse them!</p>
+
+            <div class="fun-fact">
+                <strong>💡 The Replication Reality Check:</strong> If you can't replicate it, you can't trust it. If you can barely afford to run your experiment once, you probably need to redesign it to be cheaper or find more funding. Science isn't a one-shot deal.
+            </div>
+
+            <h3>🧱 5. Block What You Can't Randomize</h3>
+
+            <p>Can't randomly assign experiments across different days? Make day a block. Different operators? Block on operator. Different batches of raw material? You guessed it – BLOCK!</p>
+
+            <p><strong>Rule of thumb:</strong> If you think "this might affect my results but I can't control it," make it a block. Your statistical power will thank you, and your results will actually make sense.</p>
+
+            <h3>📏 6. Standardize Your Measurements</h3>
+
+            <p>Using different measurement techniques, instruments, or even different times of day can introduce variation that has nothing to do with your treatments. Standardize EVERYTHING:</p>
+
+            <ul>
+                <li>Same equipment (or calibrate everything to death)</li>
+                <li>Same protocols (written down, not "the way Bob usually does it")</li>
+                <li>Same environmental conditions (temperature, humidity, time of day)</li>
+                <li>Same level of coffee consumption... okay, maybe that's just us</li>
+            </ul>
+
+            <h3>🎯 7. Define Your Response Variables BEFORE You Start</h3>
+
+            <p>Measuring everything you can think of and then seeing what's significant is called "fishing" or "p-hacking," and it's a great way to find spurious results that won't replicate. Decide what you're measuring and why BEFORE you collect data.</p>
+
+            <div class="warning-box">
+                <strong>⚠️ P-hacking is Not a Strategy:</strong> "Let's measure 50 things and see what's significant!" is how you get papers retracted. Pre-specify your outcomes, or at least label exploratory analyses as exploratory. Your scientific integrity depends on it.
+            </div>
+
+            <h3>📝 8. Document EVERYTHING</h3>
+
+            <p>Future you will not remember why you coded treatments as "A" and "B" or what that column labeled "misc_var3" means. Document:</p>
+
+            <ul>
+                <li>Randomization scheme used</li>
+                <li>Date, time, and conditions of each experimental run</li>
+                <li>Any deviations from protocol (they will happen)</li>
+                <li>Equipment used, batch numbers, and operator</li>
+                <li>Any "weird" observations or unexpected events</li>
+            </ul>
+
+            <h3>🎪 9. Pilot Studies Are Your Friends</h3>
+
+            <p>A small pilot study can tell you:</p>
+            <ul>
+                <li>If your measurement technique actually works</li>
+                <li>Realistic estimates of variability for power analysis</li>
+                <li>Which factors might actually matter</li>
+                <li>Whether your experimental design is even feasible</li>
+            </ul>
+
+            <p>Spending 5% of your budget on a pilot can save 95% of your budget from going down the drain. Do the math.</p>
+
+            <h3>🚫 10. Know What You're NOT Testing</h3>
+
+            <p>Every experimental design has limitations. You can't generalize beyond your factor ranges. You can't make causal claims without proper controls. You can't account for factors you didn't measure. Be honest about these limitations – it's called "intellectual integrity," and it looks great on you.</p>
+
+            <div class="highlight-box">
+                <h3>🎓 The Golden Rule of Experimental Design:</h3>
+                <p style="font-size: 1.2em; font-weight: bold; text-align: center; margin: 20px 0;">"An hour of planning saves a week of experimenting, and a week of experimenting saves a month of explaining why your results don't make sense."</p>
+            </div>
+
+            <h2>🔍 How Do We Validate That Treatment and Control Are Really Identical?</h2>
+
+            <p>Plot twist: They're probably NOT identical, and that's okay! The real question is: "Are they <em>similar enough</em> that any differences we see are due to the treatment and not pre-existing differences?" Let's talk about how to check this without losing your mind.</p>
+
+            <h3>🎯 The Baseline Comparison: Your First Line of Defense</h3>
+
+            <p>Before you even THINK about analyzing treatment effects, you need to check if your groups were balanced at the start. This is like checking if both teams have the same number of players before starting a game – seems obvious, but you'd be surprised how often it's skipped.</p>
+
+            <h3>📊 Statistical Tests for Balance (But Don't Get Too Excited)</h3>
+
+            <div class="fun-fact">
+                <strong>💡 The Baseline Testing Paradox:</strong> Many researchers run t-tests or chi-square tests on baseline characteristics. Here's the controversial truth: statisticians argue you SHOULDN'T do significance testing on baseline characteristics! Why? Because these tests can be misleading and the p-value isn't really answering the right question. Instead, focus on effect sizes and practical significance.
+            </div>
+
+            <h3>📏 Standardized Differences: The Real MVP</h3>
+
+            <p>Instead of p-values, use <strong>standardized differences</strong> (also called Cohen's d or standardized mean differences). The formula is beautifully simple:</p>
+
+            <div class="formula">
+                Standardized Difference = (Mean<sub>treatment</sub> - Mean<sub>control</sub>) / Pooled SD
+                <br><br>
+                <strong>Rule of Thumb:</strong>
+                <br>|d| < 0.1 → Excellent balance (high-five! 🙌)
+                <br>|d| < 0.2 → Acceptable balance (pretty good)
+                <br>|d| > 0.3 → Houston, we have a problem 🚨
+            </div>
+
+            <p><strong>Why standardized differences rock:</strong> Unlike p-values, they're not affected by sample size. A small difference in a huge sample might be "statistically significant" but practically meaningless. Standardized differences tell you the magnitude of imbalance, which is what actually matters.</p>
+
+            <h3>📊 Visual Diagnostics: Because Seeing is Believing</h3>
+
+            <p>Make these plots, or your statistician will judge you silently:</p>
+
+            <h4>1. 🎻 Side-by-Side Box Plots or Violin Plots</h4>
+            <p>Plot the distribution of baseline characteristics for treatment and control groups. They should look like siblings – similar, but not necessarily identical. If one looks like Arnold Schwarzenegger and the other looks like Danny DeVito (Twins reference, anyone?), you have problems.</p>
+
+            <h4>2. 📊 Histogram Overlays</h4>
+            <p>Overlay histograms of continuous baseline variables. Substantial differences in shape, center, or spread = red flag city.</p>
+
+            <h4>3. 🎯 Balance Tables (Love Plot)</h4>
+            <p>Create a "love plot" showing standardized differences for all baseline covariates. Points should cluster around zero. If they don't, time to panic (or adjust).</p>
+
+            <h3>🔬 When Groups Aren't Balanced: Your Options</h3>
+
+            <div class="warning-box">
+                <strong>⚠️ Discovered Imbalance? Don't Panic (Much):</strong>
+                <p>If randomization didn't work out (it happens, randomness is random!), you have options:</p>
+                <ol>
+                    <li><strong>Include as covariates:</strong> Add the imbalanced variables to your analysis model. ANCOVA is your friend.</li>
+                    <li><strong>Propensity score matching:</strong> Match treatment and control subjects based on their probability of receiving treatment. Fancy, but effective!</li>
+                    <li><strong>Stratification:</strong> Analyze within strata of the confounding variable.</li>
+                    <li><strong>Inverse probability weighting:</strong> Weight observations to create a pseudo-population where groups are balanced. Math-heavy but powerful.</li>
+                    <li><strong>Sensitivity analysis:</strong> Show that your results hold across different assumptions about the imbalance.</li>
+                </ol>
+            </div>
+
+            <h3>🧮 The Chi-Square Test for Categorical Variables</h3>
+
+            <p>For categorical baseline characteristics (gender, disease stage, etc.), check balance using:</p>
+
+            <div class="formula">
+                χ² = Σ [(Observed - Expected)² / Expected]
+            </div>
+
+            <p>But remember: a non-significant chi-square doesn't mean perfect balance, and a significant one doesn't mean your study is doomed. Look at the actual proportions and effect sizes!</p>
+
+            <h3>🎲 The Permutation Test: When in Doubt</h3>
+
+            <p>Not sure if your groups are similar enough? Run a permutation test:</p>
+
+            <ol>
+                <li>Calculate a test statistic comparing your groups</li>
+                <li>Randomly shuffle group labels 1,000+ times</li>
+                <li>Recalculate the statistic each time</li>
+                <li>See how often random shuffling produces differences as large as yours</li>
+            </ol>
+
+            <p>If random shuffling rarely produces differences this big, your groups are genuinely different. Time to adjust your analysis!</p>
+
+            <h3>📋 The Balance Check Checklist</h3>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Check This</th>
+                        <th>How to Check It</th>
+                        <th>Red Flag Threshold</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Continuous variables</strong></td>
+                        <td>Standardized differences, box plots, t-tests (with caution)</td>
+                        <td>|d| > 0.3</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Categorical variables</strong></td>
+                        <td>Proportions, chi-square tests, bar charts</td>
+                        <td>Difference in proportions > 10-15%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Distribution shapes</strong></td>
+                        <td>Q-Q plots, Kolmogorov-Smirnov test</td>
+                        <td>Visibly different distributions</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sample sizes</strong></td>
+                        <td>Count 'em (seriously, just count)</td>
+                        <td>Difference > 20% or planned</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Missing data patterns</strong></td>
+                        <td>Compare missingness rates between groups</td>
+                        <td>Different missingness patterns</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>🎯 Advanced Technique: Propensity Score Analysis</h3>
+
+            <p>When randomization fails or you're stuck with observational data, propensity scores can save the day. Here's the crash course:</p>
+
+            <div class="highlight-box">
+                <strong>🎓 Propensity Score 101:</strong>
+                <ol>
+                    <li><strong>Calculate propensity scores:</strong> Use logistic regression to predict probability of treatment assignment based on baseline covariates.</li>
+                    <li><strong>Check overlap:</strong> Plot propensity score distributions for both groups. They should overlap substantially. No overlap = no way to compare fairly.</li>
+                    <li><strong>Match or weight:</strong> Either match subjects with similar propensity scores or weight them inversely by propensity.</li>
+                    <li><strong>Check balance again:</strong> Verify that matching/weighting achieved balance on baseline covariates.</li>
+                    <li><strong>Analyze:</strong> Now compare outcomes between groups in the matched/weighted sample.</li>
+                </ol>
+            </div>
+
+            <h3>🚨 Common Mistakes to Avoid</h3>
+
+            <ul>
+                <li><strong>Testing too many baseline variables:</strong> Test 50 characteristics and a few will be "significantly different" by chance. Focus on variables that theoretically matter.</li>
+                <li><strong>Over-relying on p-values:</strong> P-values for baseline balance are controversial. Use effect sizes!</li>
+                <li><strong>Ignoring practical significance:</strong> A statistically significant difference might be clinically/practically irrelevant. Context matters!</li>
+                <li><strong>Adjusting for everything:</strong> Only adjust for true confounders. Adjusting for mediators or colliders can introduce bias.</li>
+                <li><strong>Checking balance AFTER seeing results:</strong> This is p-hacking's sneaky cousin. Check balance as part of your standard workflow, not selectively.</li>
+            </ul>
+
+            <div class="quote">
+                "Randomization is supposed to create balance, but randomness is random. Check your balance like you check your bank account – regularly and with slight anxiety." – Wisdom from statistical elders
+            </div>
+
+            <h3>✅ The Bottom Line on Treatment-Control Equivalence</h3>
+
+            <p>Perfect balance is a myth, like unicorns or experiments that go exactly as planned. What you want is:</p>
+
+            <ul>
+                <li>✅ Small standardized differences on important covariates (|d| < 0.2)</li>
+                <li>✅ Visual similarity in distributions</li>
+                <li>✅ No systematic patterns of imbalance</li>
+                <li>✅ Comparable sample sizes (unless planned otherwise)</li>
+                <li>✅ Similar amounts and patterns of missing data</li>
+            </ul>
+
+            <p>If you have all these, congratulations! Your treatment and control groups are "similar enough" that differences in outcomes can reasonably be attributed to your treatment. If not, adjust your analysis accordingly and document your approach. Transparency is the key to credibility!</p>
+
+            <div class="fun-fact">
+                <strong>💡 Final Truth Bomb:</strong> The best way to ensure treatment-control equivalence is proper randomization with adequate sample size. All these balance checks and adjustment methods are plan B for when plan A (randomization) doesn't work out perfectly. So randomize well, check thoroughly, and adjust when necessary. That's the scientific way!
+            </div>
+
+            <h2>🎬 Conclusion: Your DOE Journey Starts Here</h2>
+
+            <p>Design of Experiments has come a long way from Fisher counting potatoes in English fields (probably while drinking tea and being very polite about the whole thing). Today, it's an essential tool for anyone who wants to learn from data efficiently and actually understand what's happening in their experiments.</p>
+
+            <p>Whether you're optimizing pharmaceutical formulations, brewing the perfect coffee, or trying to figure out why your manufacturing process randomly produces garbage every third Tuesday, DOE has your back.</p>
+
+            <div class="quote">
+                "In God we trust. All others must bring data." – W. Edwards Deming (probably while running a factorial design)
+            </div>
+
+            <p>Remember: Every experiment you run without proper design is a waste of resources, time, and the goodwill of whoever has to analyze the resulting mess. So do yourself (and your statistician) a favor – design your experiments properly from the start.</p>
+
+            <p>Your future self, looking at beautiful, interpretable results instead of confounded chaos, will thank you. And isn't that what we're all really after?</p>
+
+            <div class="highlight-box">
+                <h3>🎓 Final Wisdom:</h3>
+                <p><strong>Start simple:</strong> Don't design a Graeco-Latin square split-plot mixture design for your first experiment. Master the basics first.</p>
+                <p><strong>Consult a statistician early:</strong> Before you run your experiment, not after you've collected data that can't be analyzed.</p>
+                <p><strong>Iterate and learn:</strong> Science is a process. Your first DOE might not be perfect, and that's okay. Learn, adapt, improve.</p>
+                <p><strong>Have fun!</strong> Yes, we just told you to have fun with statistics. Because figuring out how things work is actually pretty cool, even if it involves math.</p>
+            </div>
+
+            <div class="references">
+                <h3>📚 References & Further Reading</h3>
+                <p><em>This article synthesized content from multiple comprehensive sources on Design of Experiments, including classical texts, modern applications, and industrial case studies. For detailed IEEE-formatted references, please refer to the original source documents.</em></p>
+
+                <div style="margin-top: 20px; padding: 15px; background: white; border-radius: 8px;">
+                    <strong>Key recommended resources:</strong>
+                    <ul class="ref-list">
+                        <li>Fisher, R.A. (1935) "The Design of Experiments" - Where it all began</li>
+                        <li>Montgomery, D.C. "Design and Analysis of Experiments" - The modern bible</li>
+                        <li>Box, G.E.P., Hunter, W.G., Hunter, J.S. "Statistics for Experimenters" - Practical wisdom</li>
+                        <li>NIST Engineering Statistics Handbook - Free online resource (nist.gov)</li>
+                        <li>JMP Statistical Discovery - Excellent tutorials and case studies</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="margin-top: 50px; text-align: center; padding: 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 15px;">
+                <h3 style="color: white; border: none; margin: 0 0 15px 0;">🎉 Congratulations!</h3>
+                <p style="margin: 0; font-size: 1.1em;">You've made it through an entire article about experimental design without falling asleep! That's either impressive dedication or a really good coffee. Either way, go forth and design experiments that would make Fisher proud (and your budget committee happy).</p>
+            </div>
+        </article>
+
+        <footer>
+            <p><strong>📧 Questions? Comments? Found a typo?</strong></p>
+            <p>Excellent! That means you actually read this whole thing.</p>
+            <p style="margin-top: 20px; font-size: 0.9em;">© 2025 | Created for statisticians, scientists, engineers, and anyone who's ever wondered "what if I change TWO things at once?"</p>
+            <p style="margin-top: 10px; font-style: italic;">Remember: Correlation doesn't imply causation, but proper experimental design does. 📊✨</p>
+        </footer>
+    </div>
+</body>
+</html>
