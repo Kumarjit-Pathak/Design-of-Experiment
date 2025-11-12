@@ -24,7 +24,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 from src.utils.data_loader import load_data, identify_column_types, load_ecommerce_data
 
 # Page config
-st.set_page_config(page_title="Data Explorer", page_icon="📊", layout="wide")
+st.set_page_config(page_title="Data Explorer", page_icon="**", layout="wide")
 
 # Custom CSS - SLATE PROFESSIONAL THEME
 st.markdown("""
@@ -111,7 +111,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Header
-st.title("📊 Data Explorer")
+st.title("^ Data Explorer")
 st.markdown("Explore the e-commerce customer dataset with 20,000 observations and 24 features.")
 
 # Load data with caching
@@ -129,7 +129,7 @@ df = cached_load_ecommerce_data()
 
 if df is not None:
     # Sidebar filters
-    st.sidebar.header("🔍 Filters")
+    st.sidebar.header("^ Filters")
 
     # Filter by income level
     income_levels = ['All'] + sorted(df['income_level'].unique().tolist())
@@ -157,7 +157,7 @@ if df is not None:
         st.info(f"Filtered: {len(filtered_df):,} observations (from {len(df):,} total)")
 
     # Tabs for different views
-    tab1, tab2, tab3, tab4 = st.tabs(["📈 Overview", "📊 Distributions", "🔗 Correlations", "❓ Missing Data"])
+    tab1, tab2, tab3, tab4 = st.tabs([" Overview", " Distributions", " Correlations", " Missing Data"])
 
     # TAB 1: Overview
     with tab1:
@@ -396,7 +396,7 @@ if df is not None:
             st.success(f"Overall Data Completeness: {overall_completeness:.2f}%")
 
         else:
-            st.success("✅ No missing data found in the filtered dataset!")
+            st.success(" No missing data found in the filtered dataset!")
 
 else:
     st.error("Failed to load dataset. Please check the data file path.")
