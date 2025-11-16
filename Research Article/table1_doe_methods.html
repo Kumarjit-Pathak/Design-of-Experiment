@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    
+<style>
+.research-table {
+    font-size: 9px;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 10px 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.research-table th {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    color: white;
+    padding: 8px 6px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 9.5px;
+    border: 1px solid #4b5563;
+}
+.research-table td {
+    padding: 6px 5px;
+    border: 1px solid #e2e8f0;
+    line-height: 1.3;
+}
+.research-table tr:nth-child(even) {
+    background-color: #f7fafc;
+}
+.research-table tr:hover {
+    background-color: #edf2f7;
+}
+.research-table tr td:first-child {
+    font-weight: 600;
+    background-color: #e5e7eb;
+}
+</style>
+
+<h3 style="font-family: Arial, sans-serif; color: #333;">Table 1: Classical and Space-Filling DOE Methods</h3>
+
+<div style="overflow-x: auto;">
+<table class="research-table">
+<thead>
+<tr>
+<th>Design Method</th>
+<th>Typical Run Count</th>
+<th>Factors Estimable</th>
+<th>Resolution/<br>Confounding</th>
+<th>Space-Filling</th>
+<th>Model Type</th>
+<th>Primary Application</th>
+<th>Key Advantages</th>
+<th>Key Limitations</th>
+<th>Bias Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Full Factorial</td>
+<td>2<sup>k</sup> for k factors<br>(e.g., 8, 16, 32)</td>
+<td>All main effects, all interactions up to order k</td>
+<td>No confounding;<br>Resolution ∞</td>
+<td>Poor (corner points only)</td>
+<td>Linear, first-order</td>
+<td>Small-scale experiments (≤4 factors); interaction exploration</td>
+<td>Complete information; unbiased estimates; no aliasing</td>
+<td>Exponential run growth; impractical for k>5</td>
+<td>Randomization, blocking, replication</td>
+</tr>
+<tr>
+<td>Fractional Factorial</td>
+<td>2<sup>(k-p)</sup><br>(e.g., 8, 16, 32)</td>
+<td>Main effects; selected interactions</td>
+<td>Resolution III–V;<br>some aliasing</td>
+<td>Poor (subset of corners)</td>
+<td>Linear, first-order</td>
+<td>Screening (6–15 factors); early-stage optimization</td>
+<td>Drastically reduced runs; efficient screening</td>
+<td>Confounding/aliasing of effects; assumption of negligible interactions</td>
+<td>High-resolution designs; fold-over; sequential augmentation</td>
+</tr>
+<tr>
+<td>Plackett–Burman</td>
+<td>Multiples of 4<br>(12, 20, 24, 28, etc.)</td>
+<td>Main effects only</td>
+<td>Resolution III;<br>heavy confounding</td>
+<td>Poor (structured, non-factorial)</td>
+<td>Main effects only</td>
+<td>High-dimensional screening (>10 factors)</td>
+<td>Extreme run efficiency; up to N-1 factors in N runs</td>
+<td>Cannot estimate interactions; severe aliasing</td>
+<td>Confirmatory runs; dummy factors; follow-up experiments</td>
+</tr>
+<tr>
+<td>Central Composite<br>Design (CCD)</td>
+<td>2<sup>k</sup> + 2k + n<sub>c</sub><br>(e.g., 15–30)</td>
+<td>Main, quadratic, two-factor interactions</td>
+<td>Minimal for<br>2nd-order model</td>
+<td>Moderate (axial + factorial)</td>
+<td>Second-order polynomial (quadratic)</td>
+<td>Process optimization (3–5 factors); RSM</td>
+<td>Efficient quadratic modeling; rotatability options; well-studied</td>
+<td>Star points may exceed factor bounds; not space-filling</td>
+<td>Blocking for star/factorial; randomization; center point replication</td>
+</tr>
+<tr>
+<td>Box–Behnken<br>Design (BBD)</td>
+<td>2k<sup>2</sup> + 2k + 1<br>(e.g., 13, 25, 41)</td>
+<td>Main, quadratic, two-factor interactions</td>
+<td>Minimal for<br>2nd-order model</td>
+<td>Moderate (edge midpoints + center)</td>
+<td>Second-order polynomial (quadratic)</td>
+<td>Optimization (3–7 factors); avoiding extreme corners</td>
+<td>Fewer runs than CCD; avoids corner extremes; rotatable</td>
+<td>No corner points; limited for 3+ factor levels</td>
+<td>Randomization; center point replication</td>
+</tr>
+<tr>
+<td>Latin Hypercube<br>Sampling (LHS)</td>
+<td>Flexible<br>(user-defined N)</td>
+<td>Model-free; all factors uniformly sampled</td>
+<td>No confounding<br>(model-agnostic)</td>
+<td>Good (stratified in each dimension)</td>
+<td>Non-parametric; surrogate models (GP, neural nets)</td>
+<td>Computer experiments; global sensitivity analysis</td>
+<td>Flexible sample size; good 1D projections; variance reduction</td>
+<td>Random gaps possible; may cluster in high dimensions</td>
+<td>Optimized LHS (maximin, orthogonal)</td>
+</tr>
+<tr>
+<td>Halton Sequence</td>
+<td>Flexible<br>(deterministic sequence)</td>
+<td>Model-free; quasi-random coverage</td>
+<td>No confounding</td>
+<td>Excellent<br>(low-discrepancy)</td>
+<td>Non-parametric; surrogate models</td>
+<td>Simulation-based DOE; sequential experimentation</td>
+<td>Deterministic; reproducible; sequentially extendable; superior uniformity</td>
+<td>May show patterns in high dimensions; not strictly LHS</td>
+<td>Deterministic uniformity ensures unbiased coverage</td>
+</tr>
+<tr>
+<td>Random k-Means<br>Cluster</td>
+<td>Flexible<br>(N clusters from M>>N samples)</td>
+<td>Model-free</td>
+<td>No confounding</td>
+<td>Excellent<br>(CVT-like)</td>
+<td>Non-parametric; surrogate models</td>
+<td>Space-filling for complex domains; adaptive sampling</td>
+<td>Approximates optimal space-filling; handles constraints; flexible</td>
+<td>Computationally intensive for large M; requires re-clustering for expansion</td>
+<td>Uniform random initial sampling; multivariate uniformity</td>
+</tr>
+<tr>
+<td>Maximin Distance</td>
+<td>Flexible<br>(optimized for N points)</td>
+<td>Model-free</td>
+<td>No confounding</td>
+<td>Excellent<br>(maximizes minimum distance)</td>
+<td>Non-parametric; surrogate models</td>
+<td>Global optimization; worst-case coverage</td>
+<td>No clustered points; guaranteed minimum separation</td>
+<td>May concentrate on boundaries; poor projections; edge bias</td>
+<td>Maximin criterion avoids cluster bias; hybrid maximin-LHS</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+</body>
+</html>

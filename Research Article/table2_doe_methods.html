@@ -1,0 +1,188 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    
+<style>
+.research-table-2 {
+    font-size: 9px;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 10px 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.research-table-2 th {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    color: white;
+    padding: 8px 6px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 9.5px;
+    border: 1px solid #4b5563;
+}
+.research-table-2 td {
+    padding: 6px 5px;
+    border: 1px solid #e2e8f0;
+    line-height: 1.3;
+}
+.research-table-2 tr:nth-child(even) {
+    background-color: #f7fafc;
+}
+.research-table-2 tr:hover {
+    background-color: #edf2f7;
+}
+.research-table-2 tr td:first-child {
+    font-weight: 600;
+    background-color: #e5e7eb;
+}
+</style>
+
+<h3 style="font-family: Arial, sans-serif; color: #333;">Table 2: Advanced and Specialized DOE Methods</h3>
+
+<div style="overflow-x: auto;">
+<table class="research-table-2">
+<thead>
+<tr>
+<th>Design Method</th>
+<th>Typical Run Count</th>
+<th>Factors Estimable</th>
+<th>Special Features</th>
+<th>Model Type</th>
+<th>Primary Application</th>
+<th>Key Advantages</th>
+<th>Key Limitations</th>
+<th>Bias Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D-Optimal Design</td>
+<td>Variable<br>(optimized for specific N)</td>
+<td>User-defined (main, interactions, quadratics)</td>
+<td>Maximizes determinant of information matrix; handles constraints</td>
+<td>Flexible<br>(polynomial, custom)</td>
+<td>Constrained design spaces; irregular regions; mixture experiments</td>
+<td>Handles complex constraints; mixed factor types; irregular boundaries; optimal for specific models</td>
+<td>Model-dependent; requires candidate set; computationally intensive; no standard run formula</td>
+<td>Model adequacy checking; augmentation strategies; sequential refinement</td>
+</tr>
+<tr>
+<td>A-Optimal Design</td>
+<td>Variable<br>(optimized)</td>
+<td>User-defined</td>
+<td>Minimizes average variance of parameter estimates</td>
+<td>Flexible<br>(polynomial, custom)</td>
+<td>Prediction-focused applications; parameter estimation precision</td>
+<td>Minimizes average prediction variance; handles constraints</td>
+<td>Model-dependent; different objectives than D-optimal; requires optimization algorithms</td>
+<td>Model validation; cross-validation; sequential augmentation</td>
+</tr>
+<tr>
+<td>Definitive Screening<br>Design (DSD)</td>
+<td>2k + 1 for k factors<br>(e.g., 7, 13, 17)</td>
+<td>Main effects, two-factor interactions, quadratics (with sparsity)</td>
+<td>3-level design; no confounding of main effects; economical</td>
+<td>Second-order with interaction selection</td>
+<td>Combined screening and optimization; early product development</td>
+<td>Estimates main, interactions, quadratics in one design; minimal runs; no aliasing of main effects</td>
+<td>Requires effect sparsity assumption; 3 levels required; relatively new (limited long-term validation)</td>
+<td>Randomization; augmentation if needed; effect heredity principles</td>
+</tr>
+<tr>
+<td>Taguchi Orthogonal<br>Arrays</td>
+<td>Standard arrays<br>(L8, L9, L12, L16, L18, L27, etc.)</td>
+<td>Main effects primarily; some interactions</td>
+<td>Inner (control) and outer (noise) array structure</td>
+<td>Signal-to-noise ratio optimization</td>
+<td>Robust parameter design; quality engineering; Six Sigma</td>
+<td>Emphasizes robustness to noise; widely adopted in industry; standard arrays available</td>
+<td>Heavy confounding; limited interaction estimation; complex analysis for interactions</td>
+<td>Noise factor explicit consideration; confirmation runs; robust design philosophy</td>
+</tr>
+<tr>
+<td>Mixture Designs<br>(Simplex-Lattice)</td>
+<td>C(q+m-1, m) for<br>q levels, m components</td>
+<td>Mixture effects; blending interactions</td>
+<td>Factors are proportions summing to 1 (or 100%)</td>
+<td>Scheffe polynomials (mixture models)</td>
+<td>Formulation (food, pharma, chemicals, cosmetics); blending</td>
+<td>Handles compositional constraints naturally; specialized models for mixtures</td>
+<td>Constrained to simplex space; cannot test zero proportions; specialized analysis</td>
+<td>Pseudo-components for constrained regions; replication of interior points</td>
+</tr>
+<tr>
+<td>Mixture Designs<br>(Simplex-Centroid)</td>
+<td>2<sup>m</sup> - 1<br>for m components</td>
+<td>Mixture effects including centroids</td>
+<td>Includes all vertices, edge centers, and overall centroid</td>
+<td>Scheffe polynomials</td>
+<td>Formulation with emphasis on blend centers</td>
+<td>More points at interior; better for nonlinear blending; includes overall center</td>
+<td>More runs than simplex-lattice; constrained space</td>
+<td>Interior point replication; pseudo-components</td>
+</tr>
+<tr>
+<td>Split-Plot Designs</td>
+<td>Depends on whole-plot and sub-plot structure</td>
+<td>Main effects and interactions (with separate error terms)</td>
+<td>Two levels of randomization; hard-to-change and easy-to-change factors</td>
+<td>Mixed-effects models</td>
+<td>Experiments with hard-to-change factors (temperature, batch, equipment)</td>
+<td>Reflects practical constraints; reduces cost of changing hard factors; realistic industrial model</td>
+<td>Complex analysis (two error terms); restricted randomization; requires mixed-model expertise</td>
+<td>Proper randomization at both levels; blocking; REML analysis</td>
+</tr>
+<tr>
+<td>Sobol Sequences</td>
+<td>Flexible<br>(deterministic)</td>
+<td>Model-free</td>
+<td>Low-discrepancy quasi-random sequence; superior uniformity</td>
+<td>Non-parametric; surrogate models</td>
+<td>Global sensitivity analysis; computer experiments; Monte Carlo methods</td>
+<td>Excellent multi-dimensional uniformity; deterministic; reproducible; sequentially extendable</td>
+<td>Dimension-dependent performance; requires initialization; more complex than Halton</td>
+<td>Deterministic uniformity; scrambling variants for improved properties</td>
+</tr>
+<tr>
+<td>Uniform Design</td>
+<td>U<sub>n</sub>(q<sup>m</sup>):<br>n runs, m factors, q levels</td>
+<td>Main effects; model-free exploration</td>
+<td>Number-theoretic uniformity; discrepancy minimization</td>
+<td>Flexible/<br>non-parametric</td>
+<td>Many-factor screening; non-polynomial relationships; complex systems</td>
+<td>Handles many factors with few runs; good uniformity; flexible modeling</td>
+<td>Specialized tables needed; less familiar in Western industry; complex construction</td>
+<td>Uniformity ensures balanced coverage; validation experiments</td>
+</tr>
+<tr>
+<td>Adaptive/Sequential<br>Designs</td>
+<td>Sequential accumulation (iterative)</td>
+<td>Depends on learning algorithm</td>
+<td>Next experiment selected based on prior results; active learning</td>
+<td>Bayesian, Gaussian process, neural networks</td>
+<td>Expensive experiments; optimization under uncertainty; AI-integrated DOE</td>
+<td>Efficient learning; adapts to data; integrates prior knowledge; optimal resource allocation</td>
+<td>Requires sophisticated algorithms; sequential (not parallelizable); model-dependent</td>
+<td>Bayesian updating; exploration-exploitation balance; cross-validation</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+</body>
+</html>
